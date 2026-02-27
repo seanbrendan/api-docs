@@ -837,6 +837,10 @@ p code, li code, td code {
     "imageUrl": "https://example.com/team-logo.png",
     "defaultColor": "#FF6B35",
     "awayColor": "#FFFFFF",
+    "location": {
+      "lat": 40.7589,
+      "long": -73.9851
+    },
     "type": "MINE",
     "private": false
   }'</code></pre>
@@ -1071,8 +1075,17 @@ p code, li code, td code {
     "fileName": "game-video.mp4",
     "fileSize": 15862337,
     "totalParts": 4,
-    "contentType": "video/mp4"
+    "contentType": "video/mp4",
+    "checksums": [
+      { "partNumber": 1, "checksumSHA256": "ucVFyrTpenFDKUW+tkT0CjZd/Wqy1/Fd07fvgLv8yp4=" },
+      { "partNumber": 2, "checksumSHA256": "bLaaSNSI3Zh4jv1DI82JCrgSrSvnipz+Rla46Sr24iQ=" },
+      { "partNumber": 3, "checksumSHA256": "dhTaTJHbuLVPoFQAOlrRdoBvB4VM4XaKkxckyT3yGyU=" },
+      { "partNumber": 4, "checksumSHA256": "ie4cfnz8WHf2RhLVGYcWZit/RoX5fMj1/aZus9PE2wc=" }
+    ]
   }'</code></pre>
+</div>
+<div class="info-box tip">
+  <strong>Note:</strong> The <code>checksums</code> array is optional but recommended. Calculate SHA256 checksum for each file chunk (base64 encoded). Use <code>totalParts = Math.ceil(fileSize / CHUNK_SIZE)</code> where CHUNK_SIZE is typically 5MB.
 </div>
 <div class="code-block">
 <div class="code-block-header"><span>Response</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
@@ -1088,13 +1101,17 @@ p code, li code, td code {
   <span class="step-number">6.2</span>
   <h4>Upload Each Chunk</h4>
 </div>
-<p>For each <code>presignedUrl[].uploadUrl</code>, send a PUT request with the file chunk. You can upload chunks concurrently.</p>
+<p>For each <code>presignedUrl[].uploadUrl</code>, send a PUT request with the file chunk. You can upload chunks concurrently (e.g., 6 parallel requests).</p>
 <div class="code-block">
 <div class="code-block-header"><span>PUT to presigned URL</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>PUT {presignedUrl}
 Content-Type: video/mp4
+x-amz-checksum-sha256: ucVFyrTpenFDKUW+tkT0CjZd/Wqy1/Fd07fvgLv8yp4=
 
 (file bytes for this chunk)</code></pre>
+</div>
+<div class="info-box tip">
+  <strong>Note:</strong> Include the <code>x-amz-checksum-sha256</code> header with the base64-encoded SHA256 checksum of the chunk data. This ensures data integrity during upload.
 </div>
 </div>
 
@@ -1114,12 +1131,13 @@ Content-Type: video/mp4
 </div>
 
 <h4 style="margin-top: 24px;">Node.js Upload Example</h4>
-<p>Here's a complete Node.js script for uploading videos:</p>
+<p>Here's a complete Node.js script for uploading videos with resume support:</p>
 <div class="code-block">
 <div class="code-block-header"><span>upload.js</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>const fs = require('fs');
 const axios = require('axios');
 
+// Update this configuration
 const CONFIG = {
   baseUrl: "https://api.sportsvisio-api.com",
   token: "YOUR_AUTH_TOKEN",
@@ -1129,27 +1147,58 @@ const CONFIG = {
 };
 
 async function upload() {
-  const [,, filePath] = process.argv;
-  if (!filePath) return console.log('Usage: node upload.js &lt;file&gt;');
+  const [,, filePath, uploadId] = process.argv;
+  if (!filePath) return console.log('Usage: node upload.js &lt;file&gt; [uploadId]');
 
   const fileName = filePath.split('/').pop();
   const fileSize = fs.statSync(filePath).size;
   const totalParts = Math.ceil(fileSize / CONFIG.CHUNK_SIZE);
   const auth = { headers: { Authorization: `Bearer ${CONFIG.token}` } };
 
-  // Initialize upload
-  const session = (await axios.post(
-    `${CONFIG.baseUrl}/devices/init-upload-multipart/${CONFIG.scheduledGameId}/${CONFIG.deviceId}`,
-    { fileName, fileSize, totalParts, contentType: "video/mp4" },
-    auth
-  )).data;
+  // Initialize or resume upload session
+  let session = uploadId
+    ? { uploadInfo: { uploadId } }
+    : (await axios.post(
+        `${CONFIG.baseUrl}/devices/init-upload-multipart/${CONFIG.scheduledGameId}/${CONFIG.deviceId}`,
+        { fileName, fileSize, totalParts, contentType: "video/mp4" },
+        auth
+      )).data;
+
+  // Get already uploaded parts (for resume)
+  const uploadedParts = uploadId
+    ? (await axios.get(
+        `${CONFIG.baseUrl}/upload/multipart/${session.uploadInfo.uploadId}/parts`,
+        auth
+      )).data.parts
+    : [];
+
+  // Find missing parts
+  const missing = Array.from({length: totalParts}, (_, i) =&gt; i + 1)
+    .filter(p =&gt; !uploadedParts.find(up =&gt; up.partNumber === p));
+
+  // Get presigned URLs for missing parts
+  if (missing.length) {
+    session.presignedUrls = (await axios.post(
+      `${CONFIG.baseUrl}/upload/multipart/${session.uploadInfo.uploadId}/presigned-urls`,
+      { partNumbers: missing },
+      auth
+    )).data.presignedUrls;
+  }
 
   // Upload each chunk
-  for (const { partNumber, uploadUrl } of session.presignedUrls) {
+  for (const { partNumber, uploadUrl } of session.presignedUrls || []) {
     const start = (partNumber - 1) * CONFIG.CHUNK_SIZE;
-    const chunk = fs.readFileSync(filePath).slice(start, start + CONFIG.CHUNK_SIZE);
-    console.log(`Uploading part ${partNumber}/${totalParts}...`);
-    await axios.put(uploadUrl, chunk, { headers: { "Content-Type": "video/mp4" } });
+    const chunkSize = Math.min(CONFIG.CHUNK_SIZE, fileSize - start);
+    const chunk = fs.readFileSync(filePath).slice(start, start + chunkSize);
+
+    console.log(`Uploading part ${partNumber}/${totalParts} (${chunk.length} bytes)...`);
+
+    const res = await axios.put(uploadUrl, chunk, {
+      headers: { "Content-Type": "video/mp4" }
+    });
+    const etag = res.headers.etag;
+    console.log(`Part ${partNumber} uploaded. ETag: ${etag}`);
+    console.log(`Resume command: node upload.js ${filePath} ${session.uploadInfo.uploadId}`);
   }
 
   // Complete upload
@@ -1163,7 +1212,14 @@ async function upload() {
 
 upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));</code></pre>
 </div>
-<p style="margin-top: 12px;">Run with: <code>node upload.js /path/to/game-video.mp4</code></p>
+<p style="margin-top: 12px;"><strong>Usage:</strong></p>
+<ul style="margin: 8px 0 0 20px; padding: 0;">
+  <li>Initial upload: <code>node upload.js /path/to/game-video.mp4</code></li>
+  <li>Resume interrupted upload: <code>node upload.js /path/to/game-video.mp4 {uploadId}</code></li>
+</ul>
+<div class="info-box tip" style="margin-top: 16px;">
+  <strong>Alternative:</strong> For browser-based uploads, consider using <a href="https://uppy.io/" target="_blank" rel="noopener">Uppy</a> which handles multipart uploads with built-in UI.
+</div>
 
 </section>
 
@@ -1194,6 +1250,8 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   "endTime": 1734295500,
   "status": "final-approved",
   "timezone": "America/New_York",
+  "events": [...],
+  "deviceGameAssn": [...],
   "teamGameAssn": [
     {
       "designation": "Away",
@@ -1225,8 +1283,11 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <thead><tr><th>Field</th><th>Description</th></tr></thead>
 <tbody>
 <tr><td><span class="param-name">id</span></td><td>Unique ID for the scheduled game</td></tr>
-<tr><td><span class="param-name">startTime</span>, <span class="param-name">endTime</span></td><td>Start and end times in epoch seconds</td></tr>
+<tr><td><span class="param-name">startTime</span>, <span class="param-name">endTime</span></td><td>Start and end times in <strong>epoch seconds</strong></td></tr>
 <tr><td><span class="param-name">status</span></td><td>Processing status: <code>scheduled</code>, <code>annotating</code>, <code>qa-review</code>, <code>final-approved</code></td></tr>
+<tr><td><span class="param-name">timezone</span></td><td>Time zone for the game's local time</td></tr>
+<tr><td><span class="param-name">events</span></td><td>Game events data (periods, timeouts, etc.)</td></tr>
+<tr><td><span class="param-name">deviceGameAssn</span></td><td>Associated recording devices and their positions</td></tr>
 <tr><td><span class="param-name">teamGameAssn</span></td><td>Teams, scores, and rosters for the game</td></tr>
 <tr><td><span class="param-name">gameHighlight</span></td><td>Auto-generated highlight video (when available)</td></tr>
 </tbody>
@@ -1256,9 +1317,23 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <pre><code>{
   "id": "4459999d-db3f-4d97-89aa-b0448f06172f",
   "createdAt": "2025-11-12T11:26:23.000Z",
+  "updatedAt": "2025-11-12T11:26:23.000Z",
+  "deletedAt": null,
+  "timeline": null,
+  "coachInsights": null,
   "aiSummary": "In a commanding straight-set victory, Team A dominated with a relentless service assault. Player 8 delivered 11 aces on 21 attempts while committing only two faults. Defensively, the back row was stout, highlighted by six digs each from key players..."
 }</code></pre>
 </div>
+<h4 style="margin-top: 16px;">Response Fields</h4>
+<table class="param-table">
+<thead><tr><th>Field</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><span class="param-name">id</span></td><td>Unique ID for the insights record</td></tr>
+<tr><td><span class="param-name">aiSummary</span></td><td>AI-generated narrative summary of the game, highlighting key performances and plays</td></tr>
+<tr><td><span class="param-name">timeline</span></td><td>Game timeline data (when available)</td></tr>
+<tr><td><span class="param-name">coachInsights</span></td><td>Coach-specific analysis and recommendations (when available)</td></tr>
+</tbody>
+</table>
 </div>
 
 <!-- 7.3 Player Stats -->
@@ -1305,15 +1380,21 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 ]</code></pre>
 </div>
 
-<h4 style="margin-top: 16px;">Key Response Fields</h4>
+<h4 style="margin-top: 16px;">Response Fields</h4>
 <table class="param-table">
-<thead><tr><th>Field</th><th>Description</th></tr></thead>
+<thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><span class="param-name">summary</span></td><td>Statistical summary for the player. Fields depend on sport (basketball: points, rebounds, assists; volleyball: kills, aces, digs)</td></tr>
-<tr><td><span class="param-name">summaryType</span></td><td>Scope of the summary (e.g., <code>game</code>)</td></tr>
-<tr><td><span class="param-name">player.number</span></td><td>Jersey number used in that specific game</td></tr>
-<tr><td><span class="param-name">player.team</span></td><td>Team information including sport type</td></tr>
-<tr><td><span class="param-name">player.playerProfileAssn</span></td><td>Links to user profile if available (<code>null</code> if not associated)</td></tr>
+<tr><td><span class="param-name">summary</span></td><td><code>object</code></td><td>Statistical summary for the player. Fields depend on sport&mdash;for basketball: <code>points</code>, <code>rebounds</code>, <code>assists</code>, <code>steals</code>, <code>blocks</code>, <code>turnovers</code>; for volleyball: <code>kills</code>, <code>aces</code>, <code>digs</code>, etc. See Swagger docs for <code>BasketballStatSummary</code> or <code>VolleyballStatSummary</code>.</td></tr>
+<tr><td><span class="param-name">summaryType</span></td><td><code>string</code></td><td>Scope of the summary (e.g., <code>"game"</code>)</td></tr>
+<tr><td><span class="param-name">player.id</span></td><td><code>string</code></td><td>Internal identifier for the player within the system</td></tr>
+<tr><td><span class="param-name">player.name</span></td><td><code>string</code></td><td>Name registered in the game data (may be empty if using profile info)</td></tr>
+<tr><td><span class="param-name">player.number</span></td><td><code>string</code></td><td>Jersey number used by the player in that specific game</td></tr>
+<tr><td><span class="param-name">player.team.id</span></td><td><code>string</code></td><td>Unique identifier of the team the player belongs to in that game</td></tr>
+<tr><td><span class="param-name">player.team.name</span></td><td><code>string</code></td><td>Team name as displayed in the game</td></tr>
+<tr><td><span class="param-name">player.team.sportId</span></td><td><code>string</code></td><td>Identifies the sport type&mdash;determines which stats appear in <code>summary</code></td></tr>
+<tr><td><span class="param-name">player.playerProfileAssn</span></td><td><code>object | null</code></td><td>Links to the player's user profile if available. <code>null</code> if the player isn't associated with a registered user.</td></tr>
+<tr><td><span class="param-name">player.playerProfileAssn.profile.firstName</span></td><td><code>string</code></td><td>Player's first name (from profile association)</td></tr>
+<tr><td><span class="param-name">player.playerProfileAssn.profile.lastName</span></td><td><code>string</code></td><td>Player's last name (from profile association)</td></tr>
 </tbody>
 </table>
 

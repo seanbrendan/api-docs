@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SportsVisio Public API Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* SportsVisio Brand Colors */
+  --sv-red: #FF4C57;
+  --sv-black-1: #151515;
+  --sv-black-2: #202020;
+  --sv-gray-1: #666666;
+  --sv-gray-2: #999999;
+  --sv-gray-3: #C4C4C4;
+  --sv-gray-4: #DDDDDD;
+  --sv-cream: #FBF1D0;
+  --sv-orange: #FEC679;
+  --sv-coral: #FA7368;
+
+  --bg: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-sidebar: var(--sv-black-1);
+  --bg-sidebar-hover: var(--sv-black-2);
+  --bg-code: var(--sv-black-1);
+  --text: var(--sv-black-1);
+  --text-secondary: var(--sv-gray-1);
+  --text-sidebar: var(--sv-gray-3);
+  --text-sidebar-active: #ffffff;
+  --accent: var(--sv-red);
+  --accent-light: #fff0f1;
+  --border: var(--sv-gray-4);
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.12);
+  --get: #22c55e;
+  --get-bg: #f0fdf4;
+  --post: var(--sv-red);
+  --post-bg: #fff0f1;
+  --put: var(--sv-orange);
+  --put-bg: #fef9f0;
+  --delete: #ef4444;
+  --delete-bg: #fef2f2;
+  --patch: var(--sv-coral);
+  --patch-bg: #fff5f4;
+}
+[data-theme="dark"] {
+  --bg: var(--sv-black-1);
+  --bg-secondary: var(--sv-black-2);
+  --bg-sidebar: #0a0a0a;
+  --bg-sidebar-hover: var(--sv-black-1);
+  --bg-code: #0a0a0a;
+  --text: #e8e8e8;
+  --text-secondary: var(--sv-gray-2);
+  --border: #333333;
+  --card-bg: #000000;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.5);
+  --accent-light: #2a1516;
+  --get-bg: #0f291a;
+  --post-bg: #2a1516;
+  --put-bg: #2a2010;
+  --delete-bg: #2a0f0f;
+  --patch-bg: #2a1514;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Roobert', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+code, pre, .endpoint-path, .param-name { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; }
+
+/* Layout */
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 280px;
+  background: var(--bg-sidebar);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s;
+}
+.main { margin-left: 280px; flex: 1; min-width: 0; }
+
+/* Sidebar */
+.sidebar-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+.sidebar-logo span { color: var(--sv-red); }
+.sidebar-subtitle {
+  font-size: 11px;
+  color: var(--text-sidebar);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.sidebar-nav { padding: 12px 0; }
+.sidebar-section {
+  padding: 8px 20px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 8px;
+}
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 8px 20px 8px 24px;
+  color: var(--text-sidebar);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 400;
+  transition: all 0.15s;
+  border-left: 3px solid transparent;
+}
+.sidebar-link:hover {
+  background: var(--bg-sidebar-hover);
+  color: #fff;
+}
+.sidebar-link.active {
+  color: var(--text-sidebar-active);
+  background: var(--bg-sidebar-hover);
+  border-left-color: var(--accent);
+  font-weight: 500;
+}
+.sidebar-link .link-badge {
+  margin-left: auto;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.sidebar-link .link-badge.get { background: var(--get); color: #fff; }
+.sidebar-link .link-badge.post { background: var(--post); color: #fff; }
+.sidebar-link .link-badge.mixed { background: var(--accent); color: #fff; }
+
+/* Top bar */
+.topbar {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+  backdrop-filter: blur(8px);
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px;
+}
+.search-box {
+  position: relative;
+}
+.search-box input {
+  padding: 8px 12px 8px 36px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--bg-secondary);
+  color: var(--text);
+  width: 280px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-box input:focus { border-color: var(--accent); }
+.search-box::before {
+  content: "\1F50D";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity: 0.5;
+}
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+#themeBtn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text);
+  transition: background 0.2s;
+}
+#themeBtn:hover { background: var(--bg-secondary); }
+.version-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--accent-light);
+  color: var(--sv-red);
+}
+
+/* Content */
+.content { max-width: 960px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 48px; scroll-margin-top: 72px; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--sv-cream) 0%, var(--sv-orange) 33%, var(--sv-coral) 66%, var(--sv-red) 100%);
+  border-radius: 16px;
+  padding: 48px 40px;
+  color: var(--sv-black-1);
+  margin-bottom: 40px;
+  scroll-margin-top: 72px;
+}
+.hero h1 {
+  font-family: 'Lateral Compressed', 'Roobert', 'Inter', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--sv-black-1);
+}
+.hero p { color: var(--sv-black-2); font-size: 16px; max-width: 600px; font-weight: 500; }
+.hero-meta {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  font-size: 13px;
+}
+.hero-meta-item { display: flex; align-items: center; gap: 6px; color: var(--sv-gray-1); }
+.hero-meta-item strong { color: var(--sv-black-1); }
+
+/* Quick links */
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.quick-link {
+  display: block;
+  padding: 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s;
+  box-shadow: var(--card-shadow);
+}
+.quick-link:hover { box-shadow: var(--card-shadow-hover); border-color: var(--accent); transform: translateY(-2px); }
+.quick-link-icon { font-size: 24px; margin-bottom: 8px; }
+.quick-link-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.quick-link-desc { font-size: 12px; color: var(--text-secondary); }
+
+/* Section headers */
+h2 {
+  font-family: 'Roobert', 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--sv-red);
+}
+h3 { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+p { margin-bottom: 12px; font-size: 14px; }
+
+/* Code blocks */
+.code-block {
+  background: var(--bg-code);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 12px;
+  color: #94a3b8;
+}
+.copy-btn {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #94a3b8;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.copy-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+pre {
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e2e8f0;
+}
+code { font-size: 13px; }
+p code, li code, td code {
+  background: var(--bg-secondary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--sv-red);
+  border: 1px solid var(--border);
+}
+
+/* Method badges */
+.method-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.method-badge.get { background: var(--get-bg); color: var(--get); }
+.method-badge.post { background: var(--post-bg); color: var(--post); }
+.method-badge.put { background: var(--put-bg); color: var(--put); }
+.method-badge.delete { background: var(--delete-bg); color: var(--delete); }
+
+/* Endpoint cards */
+.tag-group { margin-bottom: 32px; scroll-margin-top: 72px; }
+.tag-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.tag-group-header h3 { margin-bottom: 0; }
+.tag-count {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+.endpoint-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.endpoint-card:hover { box-shadow: var(--card-shadow-hover); }
+.endpoint-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.endpoint-header:hover { background: var(--bg-secondary); }
+.endpoint-path { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; }
+.endpoint-summary { font-size: 12px; color: var(--text-secondary); margin-right: 8px; }
+.endpoint-chevron {
+  font-size: 10px;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+.endpoint-card.open .endpoint-chevron { transform: rotate(90deg); }
+.endpoint-body {
+  display: none;
+  padding: 0 18px 18px;
+  border-top: 1px solid var(--border);
+}
+.endpoint-card.open .endpoint-body { display: block; padding-top: 18px; }
+.endpoint-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+
+/* Parameter tables */
+.param-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.param-table th {
+  text-align: left;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border);
+}
+.param-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.param-table tr:last-child td { border-bottom: none; }
+.param-name { font-weight: 500; color: var(--sv-red); font-size: 12px; }
+.param-type { font-size: 11px; color: var(--text-secondary); background: var(--bg-secondary); padding: 1px 6px; border-radius: 4px; }
+.param-in { font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--bg-secondary); color: var(--text-secondary); }
+.param-required { color: var(--delete); font-weight: 700; margin-left: 2px; }
+
+/* Response codes */
+.response-codes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.response-code {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+.response-code.success { background: var(--get-bg); color: var(--get); }
+.response-code.client-error { background: var(--delete-bg); color: var(--delete); }
+
+/* Scenario section */
+.scenario-step {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.scenario-step-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.step-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.scenario-step h4 { margin-bottom: 0; }
+
+/* Info boxes */
+.info-box {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 13px;
+  border-left: 4px solid;
+}
+.info-box.info { background: var(--post-bg); border-color: var(--post); }
+.info-box.warning { background: var(--put-bg); border-color: var(--put); }
+.info-box.tip { background: var(--get-bg); border-color: var(--get); }
+
+/* Changelog */
+.changelog-entry {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.changelog-entry:last-child { border-bottom: none; }
+.changelog-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sv-red);
+  margin-bottom: 4px;
+}
+.changelog-version {
+  font-size: 11px;
+  background: var(--accent-light);
+  color: var(--sv-red);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+.changelog-items { padding-left: 20px; margin-top: 8px; }
+.changelog-items li { font-size: 13px; margin-bottom: 4px; color: var(--text-secondary); }
+.changelog-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  margin-right: 6px;
+}
+.changelog-tag.added { background: var(--get-bg); color: var(--get); }
+.changelog-tag.changed { background: var(--put-bg); color: var(--put); }
+.changelog-tag.fixed { background: var(--post-bg); color: var(--post); }
+
+/* Hidden endpoint cards */
+.endpoint-card.hidden { display: none; }
+#no-results {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  display: none;
+}
+#no-results.visible { display: block; }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 32px;
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-top: 48px;
+}
+.footer a { color: var(--sv-red); text-decoration: none; }
+
+/* Back to top */
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  z-index: 50;
+  box-shadow: 0 4px 12px rgba(255,76,87,0.4);
+}
+.back-to-top.visible { opacity: 1; transform: translateY(0); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.3); }
+  .main { margin-left: 0; }
+  .hamburger { display: block; }
+  .content { padding: 20px; }
+  .hero { padding: 32px 24px; }
+  .hero h1 { font-size: 24px; }
+  .search-box input { width: 180px; }
+  .endpoint-header { flex-wrap: wrap; }
+  .endpoint-summary { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+<div class="sidebar-header">
+  <div class="sidebar-logo">Sports<span>Visio</span></div>
+  <div class="sidebar-subtitle">Public API</div>
+</div>
+<div class="sidebar-nav">
+  <div class="sidebar-section">Getting Started</div>
+  <a href="#overview" class="sidebar-link active" onclick="closeMobile()">Overview</a>
+  <a href="#authentication" class="sidebar-link" onclick="closeMobile()">Authentication</a>
+  <a href="#league-integration" class="sidebar-link" onclick="closeMobile()">League Integration Guide</a>
+
+  <div class="sidebar-section">API Reference</div>
+  <a href="#tag-users" class="sidebar-link" onclick="closeMobile()">Users <span class="link-badge get">1</span></a>
+  <a href="#tag-programs" class="sidebar-link" onclick="closeMobile()">Programs <span class="link-badge get">1</span></a>
+  <a href="#tag-program-divisions" class="sidebar-link" onclick="closeMobile()">Program Divisions <span class="link-badge post">1</span></a>
+  <a href="#tag-teams" class="sidebar-link" onclick="closeMobile()">Teams <span class="link-badge post">1</span></a>
+  <a href="#tag-team-players" class="sidebar-link" onclick="closeMobile()">Team Players <span class="link-badge mixed">3</span></a>
+  <a href="#tag-scheduled-games" class="sidebar-link" onclick="closeMobile()">Scheduled Games <span class="link-badge mixed">3</span></a>
+  <a href="#tag-game-team-assignment" class="sidebar-link" onclick="closeMobile()">Game Roster Assn <span class="link-badge post">1</span></a>
+  <a href="#tag-annotation-statistics" class="sidebar-link" onclick="closeMobile()">Annotation Stats <span class="link-badge get">1</span></a>
+  <a href="#tag-devices" class="sidebar-link" onclick="closeMobile()">Devices <span class="link-badge mixed">5</span></a>
+  <a href="#tag-uploads" class="sidebar-link" onclick="closeMobile()">Uploads <span class="link-badge post">1</span></a>
+  <a href="#tag-multipart-uploads" class="sidebar-link" onclick="closeMobile()">Multipart Uploads <span class="link-badge post">1</span></a>
+
+  <div class="sidebar-section">More</div>
+  <a href="#changelog" class="sidebar-link" onclick="closeMobile()">Changelog</a>
+</div>
+</nav>
+
+<!-- Main -->
+<div class="main">
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+    <div class="search-box">
+      <input type="text" placeholder="Search endpoints..." oninput="filterEndpoints(this.value)">
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="version-badge">v1.0</span>
+    <button id="themeBtn" onclick="toggleTheme()">&#9790;</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- Hero -->
+<div class="hero section" id="overview">
+  <h1>SportsVisio Public API</h1>
+  <p>Public RESTful API for accessing SportsVisio's computer vision-powered sports data. Schedules, stats, game insights, player leaderboards, and more.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>Base URL</strong> https://api.sportsvisio.com</div>
+    <div class="hero-meta-item"><strong>Version</strong> 1.0</div>
+    <div class="hero-meta-item"><strong>Auth</strong> Bearer JWT</div>
+  </div>
+</div>
+
+<!-- Quick Links -->
+<div class="quick-links">
+  <a href="#authentication" class="quick-link">
+    <div class="quick-link-icon">&#128274;</div>
+    <div class="quick-link-title">Authentication</div>
+    <div class="quick-link-desc">Set up JWT bearer tokens to access the API</div>
+  </a>
+  <a href="#league-integration" class="quick-link">
+    <div class="quick-link-icon">&#127942;</div>
+    <div class="quick-link-title">League Integration</div>
+    <div class="quick-link-desc">Common scenario: schedules, standings, stats</div>
+  </a>
+  <a href="#tag-scheduled-games" class="quick-link">
+    <div class="quick-link-icon">&#127936;</div>
+    <div class="quick-link-title">Games & Stats</div>
+    <div class="quick-link-desc">Game records, insights, and player statistics</div>
+  </a>
+  <a href="#tag-devices" class="quick-link">
+    <div class="quick-link-icon">&#128247;</div>
+    <div class="quick-link-title">Devices & Upload</div>
+    <div class="quick-link-desc">Register cameras and upload game footage</div>
+  </a>
+</div>
+
+<!-- Authentication -->
+<section class="section" id="authentication">
+<h2>Authentication</h2>
+<p>All API requests require a valid JWT bearer token in the <code>Authorization</code> header. Tokens are issued when a user authenticates with SportsVisio.</p>
+
+<div class="info-box info">
+  <strong>Header Format:</strong> Include your token in every request as shown below.
+</div>
+
+<div class="code-block">
+<div class="code-block-header"><span>HTTP Header</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJIYWkhIiwiaWF0IjoxNTg5OTk4MjA3fQ</code></pre>
+</div>
+
+<h4>Making Your First Request</h4>
+<p>Verify your token works by fetching the current user:</p>
+
+<div class="code-block">
+<div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/users/" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre>
+</div>
+
+<div class="info-box tip">
+  <strong>Tip:</strong> If you receive a <code>401 Unauthorized</code> response, your token may be expired. Re-authenticate to get a fresh token.
+</div>
+</section>
+
+<!-- League Integration Guide -->
+<section class="section" id="league-integration">
+<h2>League Integration Guide</h2>
+<p>The most common use case: a league displaying <strong>schedules, standings, game results, and player leaderboards</strong> using SportsVisio data. Follow these steps to build a complete league experience.</p>
+
+<div class="scenario-step">
+<div class="scenario-step-header">
+  <span class="step-number">1</span>
+  <h4>Get Your League / Program</h4>
+</div>
+<p>First, retrieve your program (league) record. Use the <code>programType</code> filter set to <code>league</code>.</p>
+<div class="code-block">
+<div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/programs/list/{accountId}?programType=league&limit=10" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre>
+</div>
+<div class="code-block">
+<div class="code-block-header"><span>Example Response</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>{
+  "items": [
+    {
+      "id": "a1b2c3d4-5678-9012-abcd-ef1234567890",
+      "name": "BYLD Elite Northeast League",
+      "programType": "league",
+      "sportId": "basketball",
+      "createdAt": "2025-09-15T14:00:00Z"
+    }
+  ],
+  "meta": { "total": 1, "limit": 10, "start": 0 }
+}</code></pre>
+</div>
+</div>
+
+<div class="scenario-step">
+<div class="scenario-step-header">
+  <span class="step-number">2</span>
+  <h4>Get Team Rosters</h4>
+</div>
+<p>For each team in a division, fetch the player roster. This gives you jersey numbers, names, and player IDs for building roster pages.</p>
+<div class="code-block">
+<div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/teams/players/division/list/{teamId}/{programId}/{eventId}/{divisionId}?limit=25" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre>
+</div>
+<div class="code-block">
+<div class="code-block-header"><span>Example Response</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>{
+  "items": [
+    {
+      "id": "player-uuid-001",
+      "firstName": "Marcus",
+      "lastName": "Williams",
+      "jerseyNumber": "23",
+      "position": "PG",
+      "isActive": true
+    },
+    {
+      "id": "player-uuid-002",
+      "firstName": "Ciaran",
+      "lastName": "Murphy",
+      "jerseyNumber": "11",
+      "position": "SG",
+      "isActive": true
+    }
+  ],
+  "meta": { "total": 12, "limit": 25, "start": 0 }
+}</code></pre>
+</div>
+</div>
+
+<div class="scenario-step">
+<div class="scenario-step-header">
+  <span class="step-number">3</span>
+  <h4>Get Game Schedule & Results</h4>
+</div>
+<p>Fetch individual game records for scores, status, and team assignments. Use the scheduled game ID to get full details.</p>
+<div class="code-block">
+<div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/scheduled-games/{scheduledGameId}" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre>
+</div>
+<div class="code-block">
+<div class="code-block-header"><span>Example Response</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>{
+  "id": "game-uuid-001",
+  "name": "Warriors vs Celtics",
+  "scheduledDate": "2026-02-15T19:00:00Z",
+  "status": "completed",
+  "teams": [
+    {
+      "teamId": "team-uuid-001",
+      "teamName": "Bay Area Warriors",
+      "score": 78,
+      "isHome": true
+    },
+    {
+      "teamId": "team-uuid-002",
+      "teamName": "Boston Celtics Elite",
+      "score": 72,
+      "isHome": false
+    }
+  ],
+  "court": { "name": "Court 1", "arenaName": "SportsVisio Arena" }
+}</code></pre>
+</div>
+</div>
+
+<div class="scenario-step">
+<div class="scenario-step-header">
+  <span class="step-number">4</span>
+  <h4>Get Game Insights</h4>
+</div>
+<p>Pull AI-generated game insights including trends and performance analytics from SportsVisio's computer vision engine.</p>
+<div class="code-block">
+<div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/scheduled-games/insights/{scheduledGameId}" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre>
+</div>
+</div>
+
+<div class="scenario-step">
+<div class="scenario-step-header">
+  <span class="step-number">5</span>
+  <h4>Build Player Leaderboards</h4>
+</div>
+<p>Use the game-player-rollup endpoint to get per-player stats for each game. Aggregate across games to build season leaderboards for points, rebounds, assists, and more.</p>
+<div class="code-block">
+<div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/annotations/stats/game-player-rollup/{scheduledGameId}" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre>
+</div>
+<div class="code-block">
+<div class="code-block-header"><span>Example Response</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>[
+  {
+    "playerId": "player-uuid-001",
+    "playerName": "Marcus Williams",
+    "teamName": "Bay Area Warriors",
+    "jerseyNumber": "23",
+    "stats": {
+      "points": 24,
+      "rebounds": 8,
+      "assists": 6,
+      "steals": 3,
+      "blocks": 1,
+      "turnovers": 2,
+      "fgMade": 9,
+      "fgAttempted": 18,
+      "fgPercentage": 50.0,
+      "threePtMade": 3,
+      "threePtAttempted": 7,
+      "ftMade": 3,
+      "ftAttempted": 4,
+      "minutesPlayed": 32
+    }
+  },
+  {
+    "playerId": "player-uuid-002",
+    "playerName": "Ciaran Murphy",
+    "teamName": "Bay Area Warriors",
+    "jerseyNumber": "11",
+    "stats": {
+      "points": 18,
+      "rebounds": 4,
+      "assists": 9,
+      "steals": 2,
+      "blocks": 0,
+      "turnovers": 3,
+      "fgMade": 7,
+      "fgAttempted": 15,
+      "fgPercentage": 46.7,
+      "threePtMade": 2,
+      "threePtAttempted": 5,
+      "ftMade": 2,
+      "ftAttempted": 2,
+      "minutesPlayed": 34
+    }
+  }
+]</code></pre>
+</div>
+<div class="info-box tip">
+  <strong>Tip:</strong> To build season leaderboards, call this endpoint for each completed game in the division and aggregate the stats per player across all games.
+</div>
+</div>
+</section>
+
+<!-- API Reference -->
+<section class="section" id="api-reference">
+<h2>API Reference</h2>
+<p>Complete reference for all available endpoints. Click any endpoint to expand details.</p>
+
+<div id="no-results">No endpoints match your search.</div>
+
+<!-- Users -->
+<div class="tag-group" id="tag-users">
+<div class="tag-group-header"><h3>Users</h3><span class="tag-count">1 endpoint</span></div>
+
+<div class="endpoint-card" data-search="get users userid profile authenticated">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge get">GET</span>
+<span class="endpoint-path">/users/{userId}</span>
+<span class="endpoint-summary">Get User</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Returns User record of the currently authenticated user, unless optional userId is specified.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">userId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>No</td><td>Optional user UUID. If omitted, returns authenticated user.</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 User found</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/users/{userId}" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre></div>
+</div></div>
+</div>
+
+<!-- Programs -->
+<div class="tag-group" id="tag-programs">
+<div class="tag-group-header"><h3>Programs</h3><span class="tag-count">1 endpoint</span></div>
+
+<div class="endpoint-card" data-search="get programs list accountid league club tournament paginated">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge get">GET</span>
+<span class="endpoint-path">/programs/list/{accountId}</span>
+<span class="endpoint-summary">Get Paginated List of Programs</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Returns paginated programs for the specified account or currently authenticated user. Supports filtering by sport, type, and more.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">accountId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>No</td><td>Optional account UUID</td></tr>
+<tr><td><span class="param-name">column</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>Sort column (default: createdAt)</td></tr>
+<tr><td><span class="param-name">direction</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>ASC or DESC (default: DESC)</td></tr>
+<tr><td><span class="param-name">limit</span></td><td><span class="param-in">query</span></td><td><span class="param-type">number</span></td><td>No</td><td>Max records to return</td></tr>
+<tr><td><span class="param-name">start</span></td><td><span class="param-in">query</span></td><td><span class="param-type">number</span></td><td>No</td><td>Starting offset</td></tr>
+<tr><td><span class="param-name">sportId</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>Filter by sport (default: basketball)</td></tr>
+<tr><td><span class="param-name">search</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>Search by program name or id</td></tr>
+<tr><td><span class="param-name">programType</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>generic, club, association, tournament, league, or tree</td></tr>
+<tr><td><span class="param-name">assigned</span></td><td><span class="param-in">query</span></td><td><span class="param-type">boolean</span></td><td>No</td><td>Only programs assigned to current user</td></tr>
+<tr><td><span class="param-name">havingGames</span></td><td><span class="param-in">query</span></td><td><span class="param-type">boolean</span></td><td>No</td><td>Only programs with scheduled games</td></tr>
+<tr><td><span class="param-name">isApiClient</span></td><td><span class="param-in">query</span></td><td><span class="param-type">boolean</span></td><td>No</td><td>Only programs flagged as API clients</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Paginated program list</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/programs/list/{accountId}?programType=league&limit=20" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre></div>
+</div></div>
+</div>
+
+<!-- Program Divisions -->
+<div class="tag-group" id="tag-program-divisions">
+<div class="tag-group-header"><h3>Program Divisions</h3><span class="tag-count">1 endpoint</span></div>
+<div class="endpoint-card" data-search="post programs divisions teams bulk add division">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge post">POST</span>
+<span class="endpoint-path">/programs/divisions/teams/{programId}/{eventId}/{divisionId}/bulk</span>
+<span class="endpoint-summary">Add Teams to Division</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Creates multiple division team assignment records in bulk.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Program</td></tr>
+<tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Event</td></tr>
+<tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Division</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Teams added</span><span class="response-code client-error">404 Division not found</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X POST "https://api.sportsvisio.com/programs/divisions/teams/{programId}/{eventId}/{divisionId}/bulk" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"teamIds": ["team-uuid-1", "team-uuid-2"]}'</code></pre></div>
+</div></div>
+</div>
+
+<!-- Teams -->
+<div class="tag-group" id="tag-teams">
+<div class="tag-group-header"><h3>Teams</h3><span class="tag-count">1 endpoint</span></div>
+<div class="endpoint-card" data-search="post teams create new team programid">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge post">POST</span>
+<span class="endpoint-path">/teams/{programId}/{eventId}/{divisionId}</span>
+<span class="endpoint-summary">Create Team</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Creates a new Team record within the specified program event division.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Program</td></tr>
+<tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Event</td></tr>
+<tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Division</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Team created</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X POST "https://api.sportsvisio.com/teams/{programId}/{eventId}/{divisionId}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Bay Area Warriors", "abbreviation": "BAW"}'</code></pre></div>
+</div></div>
+</div>
+
+<!-- Team Players -->
+<div class="tag-group" id="tag-team-players">
+<div class="tag-group-header"><h3>Team Players</h3><span class="tag-count">3 endpoints</span></div>
+
+<div class="endpoint-card" data-search="post teams players create teamid player">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge post">POST</span>
+<span class="endpoint-path">/teams/players/{teamId}/{programId}/{eventId}/{divisionId}</span>
+<span class="endpoint-summary">Create TeamPlayer</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Creates a TeamPlayer record associated with a Team.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Team</td></tr>
+<tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Program</td></tr>
+<tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Event</td></tr>
+<tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Division</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Player created</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X POST "https://api.sportsvisio.com/teams/players/{teamId}/{programId}/{eventId}/{divisionId}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"firstName": "Marcus", "lastName": "Williams", "jerseyNumber": "23"}'</code></pre></div>
+</div></div>
+
+<div class="endpoint-card" data-search="get teams players division list roster teamid">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge get">GET</span>
+<span class="endpoint-path">/teams/players/division/list/{teamId}/{programId}/{eventId}/{divisionId}</span>
+<span class="endpoint-summary">Get Team Players (Division Roster)</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Returns a paginated list of Team Players for the specified team and Program Event Division roster.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Team UUID</td></tr>
+<tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Program</td></tr>
+<tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Event</td></tr>
+<tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Division</td></tr>
+<tr><td><span class="param-name">column</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>Sort column</td></tr>
+<tr><td><span class="param-name">direction</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>ASC or DESC</td></tr>
+<tr><td><span class="param-name">limit</span></td><td><span class="param-in">query</span></td><td><span class="param-type">number</span></td><td>No</td><td>Max records</td></tr>
+<tr><td><span class="param-name">search</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>Filter by name</td></tr>
+<tr><td><span class="param-name">hideInactive</span></td><td><span class="param-in">query</span></td><td><span class="param-type">boolean</span></td><td>No</td><td>Skip inactive players</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Paginated player list</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/teams/players/division/list/{teamId}/{programId}/{eventId}/{divisionId}?limit=25" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre></div>
+</div></div>
+
+<div class="endpoint-card" data-search="post teams players division add roster assignment">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge post">POST</span>
+<span class="endpoint-path">/teams/players/division/{teamId}/{programId}/{eventId}/{divisionId}</span>
+<span class="endpoint-summary">Add TeamPlayers to Division Roster</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Adds existing TeamPlayers to the specified Program Event Division roster.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Team UUID</td></tr>
+<tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Program</td></tr>
+<tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Event</td></tr>
+<tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Division</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">201 Players added to roster</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X POST "https://api.sportsvisio.com/teams/players/division/{teamId}/{programId}/{eventId}/{divisionId}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '[{"teamPlayerId": "player-uuid-1"}, {"teamPlayerId": "player-uuid-2"}]'</code></pre></div>
+</div></div>
+</div>
+
+<!-- Scheduled Games -->
+<div class="tag-group" id="tag-scheduled-games">
+<div class="tag-group-header"><h3>Scheduled Games</h3><span class="tag-count">3 endpoints</span></div>
+
+<div class="endpoint-card" data-search="get scheduled games scheduledgameid details score">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge get">GET</span>
+<span class="endpoint-path">/scheduled-games/{scheduledGameId}</span>
+<span class="endpoint-summary">Get ScheduledGame</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Returns full ScheduledGame record including teams, rosters, device assignments, and game status.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Scheduled Game UUID</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Game details</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/scheduled-games/{scheduledGameId}" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre></div>
+</div></div>
+
+<div class="endpoint-card" data-search="post scheduled games create schedule new game">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge post">POST</span>
+<span class="endpoint-path">/scheduled-games/{programId}/{eventId}/{divisionId}</span>
+<span class="endpoint-summary">Create ScheduledGame</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Creates a ScheduledGame record within the specified program event division.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Program</td></tr>
+<tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Event</td></tr>
+<tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of Division</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Game created</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X POST "https://api.sportsvisio.com/scheduled-games/{programId}/{eventId}/{divisionId}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Warriors vs Celtics", "scheduledDate": "2026-03-15T19:00:00Z"}'</code></pre></div>
+</div></div>
+
+<div class="endpoint-card" data-search="get scheduled games insights ai analytics">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge get">GET</span>
+<span class="endpoint-path">/scheduled-games/insights/{scheduledGameId}</span>
+<span class="endpoint-summary">Get ScheduledGame Insights</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Returns AI-generated insights for the game including analytics, trends, and performance summaries from SportsVisio's computer vision pipeline.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Scheduled Game UUID</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Game insights</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/scheduled-games/insights/{scheduledGameId}" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre></div>
+</div></div>
+</div>
+
+<!-- Scheduled Game Team Assignment -->
+<div class="tag-group" id="tag-game-team-assignment">
+<div class="tag-group-header"><h3>Scheduled Game Team Assignment</h3><span class="tag-count">1 endpoint</span></div>
+<div class="endpoint-card" data-search="post scheduled games assigned roster player assignment">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge post">POST</span>
+<span class="endpoint-path">/scheduled-games/assigned/{scheduledGameTeamAssnId}/roster</span>
+<span class="endpoint-summary">Assign TeamPlayer to Game Roster</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Assigns TeamPlayers to a specific game roster via the scheduled game team assignment.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">scheduledGameTeamAssnId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Game Team Assignment UUID</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Roster assigned</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X POST "https://api.sportsvisio.com/scheduled-games/assigned/{scheduledGameTeamAssnId}/roster" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '[{"teamPlayerId": "player-uuid", "jerseyNumber": "23"}]'</code></pre></div>
+</div></div>
+</div>
+
+<!-- Annotation Statistics -->
+<div class="tag-group" id="tag-annotation-statistics">
+<div class="tag-group-header"><h3>Annotation Statistics</h3><span class="tag-count">1 endpoint</span></div>
+<div class="endpoint-card" data-search="get annotations stats game player rollup statistics leaderboard">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge get">GET</span>
+<span class="endpoint-path">/annotations/stats/game-player-rollup/{scheduledGameId}</span>
+<span class="endpoint-summary">Rollup Stats for Game Players</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Returns aggregated rollup statistics for each player in the specified game. Includes points, rebounds, assists, steals, blocks, turnovers, shooting percentages, and minutes played -- generated by SportsVisio's AI annotation engine.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Scheduled Game UUID</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Array of player stat summaries</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/annotations/stats/game-player-rollup/{scheduledGameId}" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre></div>
+</div></div>
+</div>
+
+<!-- Devices -->
+<div class="tag-group" id="tag-devices">
+<div class="tag-group-header"><h3>Devices</h3><span class="tag-count">5 endpoints</span></div>
+
+<div class="endpoint-card" data-search="get devices list accountid camera recording">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge get">GET</span>
+<span class="endpoint-path">/devices/list/{accountId}</span>
+<span class="endpoint-summary">Get a List of Devices</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Returns a paginated list of Device records. Supports search by device name, model, macAddress, or manufacturer.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">accountId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>No</td><td>Optional account ID</td></tr>
+<tr><td><span class="param-name">column</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>Sort column</td></tr>
+<tr><td><span class="param-name">direction</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>ASC or DESC</td></tr>
+<tr><td><span class="param-name">limit</span></td><td><span class="param-in">query</span></td><td><span class="param-type">number</span></td><td>No</td><td>Max records</td></tr>
+<tr><td><span class="param-name">start</span></td><td><span class="param-in">query</span></td><td><span class="param-type">number</span></td><td>No</td><td>Starting offset</td></tr>
+<tr><td><span class="param-name">search</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>Filter by name, model, macAddress, manufacturer</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Paginated device list</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/devices/list/{accountId}?limit=10" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre></div>
+</div></div>
+
+<div class="endpoint-card" data-search="post devices register new camera accountid">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge post">POST</span>
+<span class="endpoint-path">/devices/register/{accountId}</span>
+<span class="endpoint-summary">Register a New Device</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Creates a Device record and registers it to the specified account.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">accountId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>No</td><td>Optional account ID</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Device registered</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X POST "https://api.sportsvisio.com/devices/register/{accountId}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Court 1 Camera", "model": "SportsVisio Lens"}'</code></pre></div>
+</div></div>
+
+<div class="endpoint-card" data-search="post devices attach game recording scheduledgameid">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge post">POST</span>
+<span class="endpoint-path">/devices/attach/{scheduledGameId}</span>
+<span class="endpoint-summary">Attach Device to Game</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Attaches a registered device to a scheduled game for recording.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>UUID of scheduled game</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Device attached</span><span class="response-code client-error">404 Not found</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X POST "https://api.sportsvisio.com/devices/attach/{scheduledGameId}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"deviceId": "device-uuid"}'</code></pre></div>
+</div></div>
+
+<div class="endpoint-card" data-search="get devices upload token media scheduledgameid deviceid">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge get">GET</span>
+<span class="endpoint-path">/devices/upload-token/{scheduledGameId}/{deviceId}</span>
+<span class="endpoint-summary">Get Upload Token</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Returns an upload token to upload source media for AI processing.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Scheduled Game UUID</td></tr>
+<tr><td><span class="param-name">deviceId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Device UUID</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Upload token</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio.com/devices/upload-token/{scheduledGameId}/{deviceId}" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre></div>
+</div></div>
+
+<div class="endpoint-card" data-search="post devices init upload multipart s3 large video">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge post">POST</span>
+<span class="endpoint-path">/devices/init-upload-multipart/{scheduledGameId}/{deviceId}</span>
+<span class="endpoint-summary">Initiate Multipart Upload</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Creates a multipart upload session for direct S3 upload of source media. Use for large video files.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Scheduled Game UUID</td></tr>
+<tr><td><span class="param-name">deviceId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Device UUID</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">201 Multipart session created</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X POST "https://api.sportsvisio.com/devices/init-upload-multipart/{scheduledGameId}/{deviceId}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"filename": "game-2026-03-15.mp4", "contentType": "video/mp4"}'</code></pre></div>
+</div></div>
+</div>
+
+<!-- Uploads -->
+<div class="tag-group" id="tag-uploads">
+<div class="tag-group-header"><h3>Uploads</h3><span class="tag-count">1 endpoint</span></div>
+<div class="endpoint-card" data-search="post upload image cdn filestack">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge post">POST</span>
+<span class="endpoint-path">/upload</span>
+<span class="endpoint-summary">Upload Image to CDN</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Uploads an image to FileStack CDN and returns a storable URL for team logos, player images, etc.</p>
+<div class="response-codes"><span class="response-code success">201 Image uploaded</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X POST "https://api.sportsvisio.com/upload" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"imageData": "base64-encoded-data", "fileName": "team-logo.png"}'</code></pre></div>
+</div></div>
+</div>
+
+<!-- Multipart Uploads -->
+<div class="tag-group" id="tag-multipart-uploads">
+<div class="tag-group-header"><h3>Multipart Uploads</h3><span class="tag-count">1 endpoint</span></div>
+<div class="endpoint-card" data-search="post upload multipart complete finalize sha256">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge post">POST</span>
+<span class="endpoint-path">/upload/multipart/{uploadId}/complete</span>
+<span class="endpoint-summary">Complete Multipart Upload</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Completes the multipart upload and returns the final file URL. Optionally validates SHA256 checksum.</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">uploadId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Multipart upload ID</td></tr>
+</tbody></table>
+<div class="response-codes"><span class="response-code success">200 Upload completed</span></div>
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X POST "https://api.sportsvisio.com/upload/multipart/{uploadId}/complete" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"sha256": "optional-checksum"}'</code></pre></div>
+</div></div>
+</div>
+
+</section>
+
+<!-- Changelog -->
+<section class="section" id="changelog">
+<h2>Changelog</h2>
+<p>Track changes and updates to the SportsVisio Public API.</p>
+
+<div class="changelog-entry">
+  <div><span class="changelog-date">February 6, 2026</span><span class="changelog-version">v1.0.0</span></div>
+  <ul class="changelog-items">
+    <li><span class="changelog-tag added">Added</span> Initial public API release with 18 endpoints</li>
+    <li><span class="changelog-tag added">Added</span> League Integration Guide with step-by-step walkthrough</li>
+    <li><span class="changelog-tag added">Added</span> Game player rollup stats endpoint for leaderboard support</li>
+    <li><span class="changelog-tag added">Added</span> Game Insights endpoint for AI-generated analytics</li>
+    <li><span class="changelog-tag added">Added</span> Multipart upload support for large video files</li>
+    <li><span class="changelog-tag added">Added</span> Device management endpoints (register, attach, upload tokens)</li>
+  </ul>
+</div>
+
+<div class="changelog-entry">
+  <div><span class="changelog-date">January 2026</span><span class="changelog-version">v0.9.0-beta</span></div>
+  <ul class="changelog-items">
+    <li><span class="changelog-tag added">Added</span> Beta release for partner testing (PlayHQ, BYLD Sports)</li>
+    <li><span class="changelog-tag added">Added</span> JWT bearer token authentication</li>
+    <li><span class="changelog-tag added">Added</span> Core endpoints: Users, Programs, Teams, Scheduled Games</li>
+  </ul>
+</div>
+
+</section>
+
+<footer class="footer">
+  <p>SportsVisio Public API v1.0 &mdash; <a href="mailto:api@sportsvisio.com">api@sportsvisio.com</a></p>
+  <p style="margin-top:8px">Copyright 2026 Sports Visio Inc. All rights reserved.</p>
+</footer>
+
+</div>
+</div>
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#8593;</button>
+
+<script>
+function toggleTheme(){var h=document.documentElement,c=h.getAttribute('data-theme'),n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('sv-api-theme',n);document.getElementById('themeBtn').innerHTML=n==='dark'?'&#9788;':'&#9790;'}
+(function(){var s=localStorage.getItem('sv-api-theme');if(s){document.documentElement.setAttribute('data-theme',s);if(s==='dark')document.getElementById('themeBtn').innerHTML='&#9788;'}})();
+function toggleEndpoint(h){h.parentElement.classList.toggle('open')}
+function copyCode(b){var p=b.closest('.code-block').querySelector('pre');navigator.clipboard.writeText(p.textContent).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},2000)}).catch(function(){var r=document.createRange();r.selectNodeContents(p);var s=window.getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges();b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},2000)})}
+function filterEndpoints(q){var lq=q.toLowerCase().trim(),cards=document.querySelectorAll('.endpoint-card'),groups=document.querySelectorAll('.tag-group'),nr=document.getElementById('no-results'),vc=0;cards.forEach(function(c){var sd=c.getAttribute('data-search')||'',pt=c.querySelector('.endpoint-path').textContent.toLowerCase(),sm=c.querySelector('.endpoint-summary').textContent.toLowerCase(),m=!lq||sd.includes(lq)||pt.includes(lq)||sm.includes(lq);c.classList.toggle('hidden',!m);if(m)vc++});groups.forEach(function(g){g.style.display=g.querySelectorAll('.endpoint-card:not(.hidden)').length>0?'':'none'});nr.classList.toggle('visible',vc===0&&lq.length>0)}
+(function(){var secs=document.querySelectorAll('.section,.tag-group,.hero'),links=document.querySelectorAll('.sidebar-link'),obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){var id=e.target.id;links.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+id)})}})},{rootMargin:'-80px 0px -60% 0px',threshold:0});secs.forEach(function(s){if(s.id)obs.observe(s)})})();
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function closeMobile(){if(window.innerWidth<=900)document.getElementById('sidebar').classList.remove('open')}
+document.addEventListener('click',function(e){var sb=document.getElementById('sidebar'),hb=document.querySelector('.hamburger');if(window.innerWidth<=900&&sb.classList.contains('open')&&!sb.contains(e.target)&&!hb.contains(e.target))sb.classList.remove('open')});
+window.addEventListener('scroll',function(){document.getElementById('backToTop').classList.toggle('visible',window.scrollY>400)});
+document.querySelectorAll('.quick-link').forEach(function(l){l.addEventListener('click',function(e){e.preventDefault();var t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'})})});
+</script>
+</body>
+</html>

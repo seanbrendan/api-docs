@@ -150,6 +150,12 @@ code, pre, .endpoint-path, .param-name { font-family: 'JetBrains Mono', 'SF Mono
 .sidebar-link .link-badge.get { background: var(--get); color: #fff; }
 .sidebar-link .link-badge.post { background: var(--post); color: #fff; }
 .sidebar-link .link-badge.mixed { background: var(--accent); color: #fff; }
+.sidebar-link.sub {
+  padding-left: 36px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+.sidebar-link.sub:hover { opacity: 1; }
 
 /* Top bar */
 .topbar {
@@ -199,6 +205,57 @@ code, pre, .endpoint-path, .param-name { font-family: 'JetBrains Mono', 'SF Mono
   transform: translateY(-50%);
   font-size: 14px;
   opacity: 0.5;
+}
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-top: 4px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: var(--card-shadow-hover);
+  z-index: 1000;
+  display: none;
+}
+.search-results.visible { display: block; }
+.search-result-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item:hover, .search-result-item.selected { background: var(--bg-secondary); }
+.search-result-section {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+.search-result-title { font-weight: 500; }
+.search-result-context {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.search-result-context mark {
+  background: var(--sv-orange);
+  color: var(--sv-black-1);
+  padding: 0 2px;
+  border-radius: 2px;
+}
+.search-no-results {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 13px;
 }
 .topbar-right { display: flex; align-items: center; gap: 12px; }
 #themeBtn {
@@ -286,7 +343,7 @@ h2 {
   padding-bottom: 12px;
   border-bottom: 2px solid var(--sv-red);
 }
-h3 { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+h3 { font-size: 18px; font-weight: 600; margin-bottom: 12px; scroll-margin-top: 72px; }
 h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
 p { margin-bottom: 12px; font-size: 14px; }
 
@@ -597,7 +654,16 @@ p code, li code, td code {
   <a href="#hierarchy" class="sidebar-link" onclick="closeMobile()">Understanding the Hierarchy</a>
   <a href="#authentication" class="sidebar-link" onclick="closeMobile()">Authentication</a>
   <a href="#scheduling-games" class="sidebar-link" onclick="closeMobile()">Scheduling Games</a>
+  <a href="#step-setup-teams" class="sidebar-link sub" onclick="closeMobile()">1. Setup Teams</a>
+  <a href="#step-setup-players" class="sidebar-link sub" onclick="closeMobile()">2. Setup Players</a>
+  <a href="#step-schedule-game" class="sidebar-link sub" onclick="closeMobile()">3. Schedule Game</a>
+  <a href="#step-game-roster" class="sidebar-link sub" onclick="closeMobile()">4. Game Roster</a>
+  <a href="#step-device-setup" class="sidebar-link sub" onclick="closeMobile()">5. Device Setup</a>
+  <a href="#step-video-upload" class="sidebar-link sub" onclick="closeMobile()">6. Video Upload</a>
   <a href="#accessing-game-data" class="sidebar-link" onclick="closeMobile()">Accessing Game Data</a>
+  <a href="#step-game-info" class="sidebar-link sub" onclick="closeMobile()">Game Information</a>
+  <a href="#step-ai-summaries" class="sidebar-link sub" onclick="closeMobile()">AI Summaries</a>
+  <a href="#step-player-stats" class="sidebar-link sub" onclick="closeMobile()">Player Statistics</a>
 
   <div class="sidebar-section">API Reference</div>
   <a href="#tag-users" class="sidebar-link" onclick="closeMobile()">Users <span class="link-badge get">1</span></a>
@@ -625,7 +691,8 @@ p code, li code, td code {
   <div class="topbar-left">
     <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
     <div class="search-box">
-      <input type="text" placeholder="Search endpoints..." oninput="filterEndpoints(this.value)">
+      <input type="text" id="searchInput" placeholder="Search docs..." oninput="searchDocs(this.value)" onkeydown="handleSearchKey(event)">
+      <div class="search-results" id="searchResults"></div>
     </div>
   </div>
   <div class="topbar-right">
@@ -650,7 +717,7 @@ p code, li code, td code {
 <!-- Quick Links -->
 <div class="quick-links">
   <a href="#hierarchy" class="quick-link">
-    <div class="quick-link-icon">&#128202;</div>
+    <div class="quick-link-icon">&#128209;</div>
     <div class="quick-link-title">Understanding the Hierarchy</div>
     <div class="quick-link-desc">Learn about Programs, Events, and Divisions</div>
   </a>
@@ -748,7 +815,7 @@ p code, li code, td code {
 </div>
 
 <!-- Step 1: Setup Teams -->
-<h3 style="margin-top: 32px;">Step 1: Setup Your Teams</h3>
+<h3 id="step-setup-teams" style="margin-top: 32px;">Step 1: Setup Your Teams</h3>
 <p>You need teams in the program/event/division bucket to schedule games with them. You can either create new teams or add existing ones.</p>
 
 <div class="scenario-step">
@@ -797,7 +864,7 @@ p code, li code, td code {
 </div>
 
 <!-- Step 2: Setup Players -->
-<h3 style="margin-top: 32px;">Step 2: Setup Your Players</h3>
+<h3 id="step-setup-players" style="margin-top: 32px;">Step 2: Setup Your Players</h3>
 <p>You need players in the program/event/division bucket to include them in game rosters. You can create new players or assign existing ones.</p>
 
 <div class="scenario-step">
@@ -838,7 +905,7 @@ p code, li code, td code {
 </div>
 
 <!-- Step 3: Game Scheduling -->
-<h3 style="margin-top: 32px;">Step 3: Schedule the Game</h3>
+<h3 id="step-schedule-game" style="margin-top: 32px;">Step 3: Schedule the Game</h3>
 <p>Create a scheduled game between two teams with start/end times and team colors for easy identification.</p>
 
 <div class="scenario-step">
@@ -886,7 +953,7 @@ p code, li code, td code {
 </div>
 
 <!-- Step 4: Game Roster -->
-<h3 style="margin-top: 32px;">Step 4: Setup Game Roster</h3>
+<h3 id="step-game-roster" style="margin-top: 32px;">Step 4: Setup Game Roster</h3>
 <p>After scheduling a game, define which players will participate and their jersey numbers for this specific game.</p>
 
 <div class="scenario-step">
@@ -948,7 +1015,7 @@ p code, li code, td code {
 </div>
 
 <!-- Step 5: Device Setup -->
-<h3 style="margin-top: 32px;">Step 5: Device Setup for Video Recording</h3>
+<h3 id="step-device-setup" style="margin-top: 32px;">Step 5: Device Setup for Video Recording</h3>
 <p>Before recording games, assign recording devices to capture gameplay from different angles.</p>
 
 <div class="scenario-step">
@@ -986,7 +1053,7 @@ p code, li code, td code {
 </div>
 
 <!-- Step 6: Video Upload -->
-<h3 style="margin-top: 32px;">Step 6: Video Upload Workflow</h3>
+<h3 id="step-video-upload" style="margin-top: 32px;">Step 6: Video Upload Workflow</h3>
 <p>Upload game video for AI-powered analysis using multipart upload for large files.</p>
 
 <div class="scenario-step">
@@ -1106,7 +1173,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p>Once games are scheduled and processed, you can retrieve game information, AI-generated summaries, and player statistics.</p>
 
 <!-- 7.1 Basic Game Info -->
-<h3 style="margin-top: 24px;">Getting Basic Game Information</h3>
+<h3 id="step-game-info" style="margin-top: 24px;">Getting Basic Game Information</h3>
 <p>Retrieve game metadata, teams, rosters, and associated video recordings at any point in the workflow.</p>
 
 <div class="scenario-step">
@@ -1167,7 +1234,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 </div>
 
 <!-- 7.2 AI Summaries -->
-<h3 style="margin-top: 32px;">Getting AI Summaries</h3>
+<h3 id="step-ai-summaries" style="margin-top: 32px;">Getting AI Summaries</h3>
 
 <div class="info-box warning">
   <strong>Important:</strong> You can only read stats, summaries, or insights if the game is in <code>final-approved</code> status. If you just created the game, you need to wait for processing to complete (typically a few hours).
@@ -1195,7 +1262,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 </div>
 
 <!-- 7.3 Player Stats -->
-<h3 style="margin-top: 32px;">Getting Player Statistics</h3>
+<h3 id="step-player-stats" style="margin-top: 32px;">Getting Player Statistics</h3>
 
 <div class="scenario-step">
 <div class="scenario-step-header">
@@ -1847,7 +1914,106 @@ function toggleTheme(){var h=document.documentElement,c=h.getAttribute('data-the
 (function(){var s=localStorage.getItem('sv-api-theme');if(s){document.documentElement.setAttribute('data-theme',s);if(s==='dark')document.getElementById('themeBtn').innerHTML='&#9788;'}})();
 function toggleEndpoint(h){h.parentElement.classList.toggle('open')}
 function copyCode(b){var p=b.closest('.code-block').querySelector('pre');navigator.clipboard.writeText(p.textContent).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},2000)}).catch(function(){var r=document.createRange();r.selectNodeContents(p);var s=window.getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges();b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},2000)})}
-function filterEndpoints(q){var lq=q.toLowerCase().trim(),cards=document.querySelectorAll('.endpoint-card'),groups=document.querySelectorAll('.tag-group'),nr=document.getElementById('no-results'),vc=0;cards.forEach(function(c){var sd=c.getAttribute('data-search')||'',pt=c.querySelector('.endpoint-path').textContent.toLowerCase(),sm=c.querySelector('.endpoint-summary').textContent.toLowerCase(),m=!lq||sd.includes(lq)||pt.includes(lq)||sm.includes(lq);c.classList.toggle('hidden',!m);if(m)vc++});groups.forEach(function(g){g.style.display=g.querySelectorAll('.endpoint-card:not(.hidden)').length>0?'':'none'});nr.classList.toggle('visible',vc===0&&lq.length>0)}
+var searchIndex=[];var searchSelectedIdx=-1;
+function buildSearchIndex(){
+  searchIndex=[];
+  // Index sections
+  document.querySelectorAll('.section').forEach(function(sec){
+    var id=sec.id;if(!id)return;
+    var h2=sec.querySelector('h2');
+    var title=h2?h2.textContent:'';
+    var text=sec.textContent.substring(0,500);
+    searchIndex.push({id:id,title:title,section:'Section',text:text,el:sec});
+  });
+  // Index h3 subsections
+  document.querySelectorAll('h3[id]').forEach(function(h3){
+    var id=h3.id;
+    var parent=h3.closest('.section');
+    var parentTitle=parent?parent.querySelector('h2')?.textContent:'';
+    var nextSibling=h3.nextElementSibling;
+    var text=h3.textContent;
+    while(nextSibling&&nextSibling.tagName!=='H3'&&nextSibling.tagName!=='H2'){
+      text+=' '+nextSibling.textContent;
+      nextSibling=nextSibling.nextElementSibling;
+    }
+    searchIndex.push({id:id,title:h3.textContent,section:parentTitle||'Section',text:text.substring(0,500),el:h3});
+  });
+  // Index endpoint cards
+  document.querySelectorAll('.endpoint-card').forEach(function(card){
+    var path=card.querySelector('.endpoint-path')?.textContent||'';
+    var summary=card.querySelector('.endpoint-summary')?.textContent||'';
+    var method=card.querySelector('.method-badge')?.textContent||'';
+    var group=card.closest('.tag-group');
+    var groupTitle=group?group.querySelector('h3')?.textContent:'API';
+    var text=card.textContent.substring(0,500);
+    searchIndex.push({id:null,title:method+' '+path,section:groupTitle,text:text,el:card,isEndpoint:true,summary:summary});
+  });
+}
+function searchDocs(q){
+  var results=document.getElementById('searchResults');
+  var lq=q.toLowerCase().trim();
+  searchSelectedIdx=-1;
+  if(!lq){results.classList.remove('visible');results.innerHTML='';return;}
+  if(searchIndex.length===0)buildSearchIndex();
+  var matches=searchIndex.filter(function(item){
+    return item.title.toLowerCase().includes(lq)||item.text.toLowerCase().includes(lq);
+  }).slice(0,15);
+  if(matches.length===0){
+    results.innerHTML='<div class="search-no-results">No results found</div>';
+    results.classList.add('visible');
+    return;
+  }
+  var html=matches.map(function(m,i){
+    var ctx='';
+    var idx=m.text.toLowerCase().indexOf(lq);
+    if(idx>-1){
+      var start=Math.max(0,idx-30);
+      var end=Math.min(m.text.length,idx+lq.length+50);
+      ctx=(start>0?'...':'')+m.text.substring(start,end).replace(new RegExp('('+lq.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')+(end<m.text.length?'...':'');
+    }
+    return '<div class="search-result-item" data-idx="'+i+'" onclick="goToResult('+i+')"><div class="search-result-section">'+m.section+'</div><div class="search-result-title">'+m.title+'</div>'+(ctx?'<div class="search-result-context">'+ctx+'</div>':'')+'</div>';
+  }).join('');
+  results.innerHTML=html;
+  results.classList.add('visible');
+  window.searchMatches=matches;
+}
+function goToResult(idx){
+  var m=window.searchMatches[idx];
+  if(!m)return;
+  document.getElementById('searchResults').classList.remove('visible');
+  document.getElementById('searchInput').value='';
+  if(m.isEndpoint){
+    m.el.classList.add('open');
+    m.el.scrollIntoView({behavior:'smooth',block:'center'});
+  }else if(m.id){
+    var el=document.getElementById(m.id);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  }else{
+    m.el.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+}
+function handleSearchKey(e){
+  var results=document.getElementById('searchResults');
+  var items=results.querySelectorAll('.search-result-item');
+  if(!items.length)return;
+  if(e.key==='ArrowDown'){
+    e.preventDefault();
+    searchSelectedIdx=Math.min(searchSelectedIdx+1,items.length-1);
+    items.forEach(function(it,i){it.classList.toggle('selected',i===searchSelectedIdx)});
+    items[searchSelectedIdx]?.scrollIntoView({block:'nearest'});
+  }else if(e.key==='ArrowUp'){
+    e.preventDefault();
+    searchSelectedIdx=Math.max(searchSelectedIdx-1,0);
+    items.forEach(function(it,i){it.classList.toggle('selected',i===searchSelectedIdx)});
+    items[searchSelectedIdx]?.scrollIntoView({block:'nearest'});
+  }else if(e.key==='Enter'&&searchSelectedIdx>=0){
+    e.preventDefault();
+    goToResult(searchSelectedIdx);
+  }else if(e.key==='Escape'){
+    results.classList.remove('visible');
+  }
+}
+document.addEventListener('click',function(e){if(!e.target.closest('.search-box'))document.getElementById('searchResults').classList.remove('visible')});
 (function(){var secs=document.querySelectorAll('.section,.tag-group,.hero'),links=document.querySelectorAll('.sidebar-link'),obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){var id=e.target.id;links.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+id)})}})},{rootMargin:'-80px 0px -60% 0px',threshold:0});secs.forEach(function(s){if(s.id)obs.observe(s)})})();
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
 function closeMobile(){if(window.innerWidth<=900)document.getElementById('sidebar').classList.remove('open')}

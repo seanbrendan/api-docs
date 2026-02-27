@@ -1,8 +1,21 @@
 {
   "rewrites": [
+    { "source": "/", "destination": "/docs" },
+    { "source": "/(.*)", "destination": "/docs/$1" }
+  ],
+  "headers": [
     {
       "source": "/(.*)",
-      "destination": "/docs/$1"
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/docs",
+      "destination": "/",
+      "permanent": false
     }
   ]
 }

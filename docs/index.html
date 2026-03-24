@@ -712,6 +712,7 @@ p code, li code, td code {
   <a href="#step-device-setup" class="sidebar-link sub" onclick="closeMobile()">5. Device Setup</a>
   <a href="#step-video-upload" class="sidebar-link sub" onclick="closeMobile()">6. Video Upload</a>
   <a href="#accessing-game-data" class="sidebar-link" onclick="closeMobile()">Accessing Game Data</a>
+  <a href="#step-get-program-structure" class="sidebar-link sub" onclick="closeMobile()">Getting Program Structure</a>
   <a href="#step-list-games" class="sidebar-link sub" onclick="closeMobile()">Listing Games</a>
   <a href="#step-game-info" class="sidebar-link sub" onclick="closeMobile()">Game Information</a>
   <a href="#step-ai-summaries" class="sidebar-link sub" onclick="closeMobile()">AI Summaries</a>
@@ -1282,7 +1283,112 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <h2>Accessing Game Data</h2>
 <p>Once games are scheduled and processed, you can retrieve game information, AI-generated summaries, and player statistics.</p>
 
-<!-- 7.0 List Games -->
+<!-- 7.0 Get Program Structure -->
+<h3 id="step-get-program-structure" style="margin-top: 24px;">Getting Program Structure (PEDs)</h3>
+<p>Before accessing game data, you need to know the Program, Event, and Division IDs. Use this endpoint to retrieve the complete hierarchy.</p>
+
+<div class="scenario-step">
+<div class="scenario-step-header">
+  <span class="step-number">1</span>
+  <h4>Get Programs with PED Structure</h4>
+</div>
+<div class="code-block">
+<div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET "https://api.sportsvisio-api.com/programs/list?includePeds=true" \
+  -H "Authorization: Bearer YOUR_TOKEN"</code></pre>
+</div>
+<p style="margin-top: 12px; font-size: 13px; color: var(--text-secondary);">This returns programs for the authenticated user. The <code>includePeds=true</code> parameter includes the full Program/Event/Division hierarchy.</p>
+<div class="code-block">
+<div class="code-block-header"><span>Response</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>{
+  "meta": {
+    "total": 1,
+    "returned": 1,
+    "offset": 0,
+    "limit": 25
+  },
+  "items": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",  // ← This is your programId
+      "name": "Elite Basketball League",
+      "programType": "league",
+      "sportId": "basketball",
+      "sport": {
+        "id": "basketball",
+        "name": "Basketball"
+      },
+      "programEventAssn": [
+        {
+          "id": "pea-uuid-1",
+          "event": {
+            "id": "event-2024-fall",  // ← This is your eventId
+            "name": "Fall 2024 Season",
+            "eventType": "in-league-play",
+            "startTime": 1693526400,
+            "endTime": 1701302400
+          },
+          "programEventDivisionAssn": [
+            {
+              "id": "ped-uuid-1",
+              "division": {
+                "id": "div-mens-open",  // ← This is your divisionId
+                "name": "Men's Open Division",
+                "divisionType": "division"
+              }
+            },
+            {
+              "id": "ped-uuid-2",
+              "division": {
+                "id": "div-womens-rec",  // ← Another divisionId
+                "name": "Women's Rec Division",
+                "divisionType": "division"
+              }
+            }
+          ]
+        },
+        {
+          "id": "pea-uuid-2",
+          "event": {
+            "id": "event-2025-spring",  // ← Another eventId
+            "name": "Spring 2025 Season",
+            "eventType": "in-league-play",
+            "startTime": 1704067200,
+            "endTime": 1711929600
+          },
+          "programEventDivisionAssn": [
+            {
+              "id": "ped-uuid-3",
+              "division": {
+                "id": "div-competitive",  // ← Another divisionId
+                "name": "Competitive Division",
+                "divisionType": "division"
+              }
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "games": 42,
+        "teams": 12,
+        "events": 2,
+        "divisions": 3
+      }
+    }
+  ]
+}</code></pre>
+</div>
+<div class="info-box" style="margin-top: 16px;">
+  <strong>Understanding the Response:</strong>
+  <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+    <li><code>items[0].id</code> = <strong>programId</strong></li>
+    <li><code>items[0].programEventAssn[i].event.id</code> = <strong>eventId</strong></li>
+    <li><code>items[0].programEventAssn[i].programEventDivisionAssn[j].division.id</code> = <strong>divisionId</strong></li>
+  </ul>
+  <p style="margin: 8px 0 0 0;">Use these IDs together (programId/eventId/divisionId) to access games, teams, and other resources within that specific PED.</p>
+</div>
+</div>
+
+<!-- 7.1 List Games -->
 <h3 id="step-list-games" style="margin-top: 24px;">Listing Games</h3>
 <p>Retrieve a paginated list of all scheduled games within a specific Program, Event, and Division (PED).</p>
 

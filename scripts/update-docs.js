@@ -334,6 +334,7 @@ function generateEndpointCard(method, path, operation, baseUrl, swagger) {
 <span class="method-badge ${getMethodClass(method)}">${method.toUpperCase()}</span>
 <span class="endpoint-path">${escapeHtml(path)}</span>
 <span class="endpoint-summary">${escapeHtml(summary)}</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('${endpointId}')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">

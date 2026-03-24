@@ -467,6 +467,27 @@ p code, li code, td code {
 .endpoint-header:hover { background: var(--bg-secondary); }
 .endpoint-path { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; }
 .endpoint-summary { font-size: 12px; color: var(--text-secondary); margin-right: 8px; }
+.endpoint-link-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.endpoint-header:hover .endpoint-link-btn {
+  opacity: 1;
+}
+.endpoint-link-btn:hover {
+  background: var(--bg);
+  color: var(--sv-red);
+}
 .endpoint-chevron {
   font-size: 10px;
   color: var(--text-secondary);
@@ -1568,6 +1589,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/users/{userId}</span>
 <span class="endpoint-summary">Get User</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('get-users-userId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
@@ -1783,21 +1805,22 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/annotations/stats/game-player-rollup/{scheduledGameId}</span>
 <span class="endpoint-summary">Rollup stats for each player in the specified game uuid</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('get-annotations-stats-game-player-rollup-scheduledGameId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc"></p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-nlostswyy', 'opt-3b7klnk7f')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-3b7klnk7f', 'req-nlostswyy')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-jkqi7lgp7', 'opt-x7db7sbgp')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-x7db7sbgp', 'req-jkqi7lgp7')">Optional</button>
 </div>
-<div id="req-nlostswyy" class="param-tab-content active">
+<div id="req-jkqi7lgp7" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game uuid to fetch</td></tr>
 </tbody></table>
 </div>
-<div id="opt-3b7klnk7f" class="param-tab-content">
+<div id="opt-x7db7sbgp" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -4404,6 +4427,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/upload</span>
 <span class="endpoint-summary">Upload Image to CDN</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('post-upload')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
@@ -4434,21 +4458,22 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/upload/multipart/{uploadId}/complete</span>
 <span class="endpoint-summary">Complete Multipart Upload</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('post-upload-multipart-uploadId-complete')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc">Completes the multipart upload and returns the final file URL. Optionally validates SHA256 checksum.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-iersmrkpx', 'opt-w5ggdka8i')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-w5ggdka8i', 'req-iersmrkpx')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-sh1va6mqg', 'opt-eqofyx6ag')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-eqofyx6ag', 'req-sh1va6mqg')">Optional</button>
 </div>
-<div id="req-iersmrkpx" class="param-tab-content active">
+<div id="req-sh1va6mqg" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">uploadId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Multipart upload ID</td></tr>
 </tbody></table>
 </div>
-<div id="opt-w5ggdka8i" class="param-tab-content">
+<div id="opt-eqofyx6ag" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -4475,6 +4500,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/programs/list/{accountId}</span>
 <span class="endpoint-summary">Get paginated list of Programs</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('get-programs-list-accountId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
@@ -4572,23 +4598,24 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/programs/divisions/teams/{programId}/{eventId}/{divisionId}/bulk</span>
 <span class="endpoint-summary">Add Teams to Division</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('post-programs-divisions-teams-programId-eventId-divisionId-bulk')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc">Creates multiple division team assignment records</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-6ksgkvx89', 'opt-7g5frgplg')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-7g5frgplg', 'req-6ksgkvx89')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-keclgkqga', 'opt-wnaekfbg5')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-wnaekfbg5', 'req-keclgkqga')">Optional</button>
 </div>
-<div id="req-6ksgkvx89" class="param-tab-content active">
+<div id="req-keclgkqga" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-7g5frgplg" class="param-tab-content">
+<div id="opt-wnaekfbg5" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -4612,23 +4639,24 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/programs/divisions/games/list/{programId}/{eventId}/{divisionId}</span>
 <span class="endpoint-summary">Get a list of Scheduled Games</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('get-programs-divisions-games-list-programId-eventId-divisionId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc">Returns a list of ScheduledGame records for the specified PED</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-loo8fk2t5', 'opt-udw32bw68')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-udw32bw68', 'req-loo8fk2t5')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-brzjl5uw9', 'opt-dz5yuzosh')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-dz5yuzosh', 'req-brzjl5uw9')">Optional</button>
 </div>
-<div id="req-loo8fk2t5" class="param-tab-content active">
+<div id="req-brzjl5uw9" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-udw32bw68" class="param-tab-content">
+<div id="opt-dz5yuzosh" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">column</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Column to sort on</td></tr>
 <tr><td><span class="param-name">direction</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Sort order</td></tr>
@@ -4738,21 +4766,22 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/scheduled-games/{scheduledGameId}</span>
 <span class="endpoint-summary">Get ScheduledGame</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('get-scheduled-games-scheduledGameId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc">Returns full ScheduledGame record.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-n5uvuqob8', 'opt-jahkjm0sl')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-jahkjm0sl', 'req-n5uvuqob8')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-xzoiu95qy', 'opt-8p3hedbrq')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-8p3hedbrq', 'req-xzoiu95qy')">Optional</button>
 </div>
-<div id="req-n5uvuqob8" class="param-tab-content active">
+<div id="req-xzoiu95qy" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game uuid to fetch</td></tr>
 </tbody></table>
 </div>
-<div id="opt-jahkjm0sl" class="param-tab-content">
+<div id="opt-8p3hedbrq" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8102,23 +8131,24 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/scheduled-games/{programId}/{eventId}/{divisionId}</span>
 <span class="endpoint-summary">Create ScheduledGame</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('post-scheduled-games-programId-eventId-divisionId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc">Creates a ScheduledGame record.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-a8ome7ttw', 'opt-yuupwaj5w')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-yuupwaj5w', 'req-a8ome7ttw')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-ezxkkc9ke', 'opt-jasc5w8lm')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-jasc5w8lm', 'req-ezxkkc9ke')">Optional</button>
 </div>
-<div id="req-a8ome7ttw" class="param-tab-content active">
+<div id="req-ezxkkc9ke" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-yuupwaj5w" class="param-tab-content">
+<div id="opt-jasc5w8lm" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8166,21 +8196,22 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/scheduled-games/insights/{scheduledGameId}</span>
 <span class="endpoint-summary">Get ScheduledGame Insights</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('get-scheduled-games-insights-scheduledGameId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc">Get ScheduledGame Insights.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-jfhe3g7a9', 'opt-xiuy0kzwk')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-xiuy0kzwk', 'req-jfhe3g7a9')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-mjyzxowoq', 'opt-4dzqs9mnc')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-4dzqs9mnc', 'req-mjyzxowoq')">Optional</button>
 </div>
-<div id="req-jfhe3g7a9" class="param-tab-content active">
+<div id="req-mjyzxowoq" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game uuid to fetch</td></tr>
 </tbody></table>
 </div>
-<div id="opt-xiuy0kzwk" class="param-tab-content">
+<div id="opt-4dzqs9mnc" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8235,6 +8266,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/devices/list/{accountId}</span>
 <span class="endpoint-summary">Get a list of Devices</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('get-devices-list-accountId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
@@ -8286,6 +8318,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/devices/register/{accountId}</span>
 <span class="endpoint-summary">Register a new Device</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('post-devices-register-accountId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
@@ -8317,21 +8350,22 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/devices/attach/{scheduledGameId}</span>
 <span class="endpoint-summary">Attach device to Scheduled Game</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('post-devices-attach-scheduledGameId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc">Attaches a device to the game for recording</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-3cq1jzhl6', 'opt-jjszv178o')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-jjszv178o', 'req-3cq1jzhl6')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-5oppydt47', 'opt-lcypcbcns')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-lcypcbcns', 'req-5oppydt47')">Optional</button>
 </div>
-<div id="req-3cq1jzhl6" class="param-tab-content active">
+<div id="req-5oppydt47" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of scheduled game to attach to</td></tr>
 </tbody></table>
 </div>
-<div id="opt-jjszv178o" class="param-tab-content">
+<div id="opt-lcypcbcns" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8355,6 +8389,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/devices/upload-token/{scheduledGameId}/{deviceId}</span>
 <span class="endpoint-summary">Get Upload token to upload source media</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('get-devices-upload-token-scheduledGameId-deviceId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
@@ -8381,6 +8416,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/devices/init-upload-multipart/{scheduledGameId}/{deviceId}</span>
 <span class="endpoint-summary">Initiate multipart upload for source media</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('post-devices-init-upload-multipart-scheduledGameId-deviceId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
@@ -8427,16 +8463,17 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/teams/players/{teamId}/{programId}/{eventId}/{divisionId}</span>
 <span class="endpoint-summary">Create TeamPlayer</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('post-teams-players-teamId-programId-eventId-divisionId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc">Creates a TeamPlayer record associated with Team.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-73gaje7ag', 'opt-wywp7aeg6')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-wywp7aeg6', 'req-73gaje7ag')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-4jyrebwr1', 'opt-4hg64jt0s')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-4hg64jt0s', 'req-4jyrebwr1')">Optional</button>
 </div>
-<div id="req-73gaje7ag" class="param-tab-content active">
+<div id="req-4jyrebwr1" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
@@ -8444,7 +8481,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of team to add player</td></tr>
 </tbody></table>
 </div>
-<div id="opt-wywp7aeg6" class="param-tab-content">
+<div id="opt-4hg64jt0s" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8467,16 +8504,17 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/teams/players/division/list/{teamId}/{programId}/{eventId}/{divisionId}</span>
 <span class="endpoint-summary">Get list of Team Players assigned to the team and Program Event Division roster</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('get-teams-players-division-list-teamId-programId-eventId-divisionId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc">Returns a list of Team Players records for the specified teamId and Program Event Division roster.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-cyhgdl3vb', 'opt-l6flw9qzb')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-l6flw9qzb', 'req-cyhgdl3vb')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-znjsjwfow', 'opt-9pc6kgzvi')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-9pc6kgzvi', 'req-znjsjwfow')">Optional</button>
 </div>
-<div id="req-cyhgdl3vb" class="param-tab-content active">
+<div id="req-znjsjwfow" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Team uuid to fetch</td></tr>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
@@ -8484,7 +8522,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-l6flw9qzb" class="param-tab-content">
+<div id="opt-9pc6kgzvi" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">column</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Column to sort on</td></tr>
 <tr><td><span class="param-name">direction</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Sort order</td></tr>
@@ -8734,16 +8772,17 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/teams/players/division/{teamId}/{programId}/{eventId}/{divisionId}</span>
 <span class="endpoint-summary">Add TeamPlayers to Division Roster</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('post-teams-players-division-teamId-programId-eventId-divisionId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc">Adds TeamPlayers to the specified Program Event Division roster</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-1hpfgcosj', 'opt-noe9t9ohg')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-noe9t9ohg', 'req-1hpfgcosj')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-lsl5hb5h9', 'opt-lo2639r0w')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-lo2639r0w', 'req-lsl5hb5h9')">Optional</button>
 </div>
-<div id="req-1hpfgcosj" class="param-tab-content active">
+<div id="req-lsl5hb5h9" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Team uuid to fetch</td></tr>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
@@ -8751,7 +8790,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-noe9t9ohg" class="param-tab-content">
+<div id="opt-lo2639r0w" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8778,6 +8817,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/teams/list/{programId}/{eventId}/{divisionId}</span>
 <span class="endpoint-summary">Get a list of Teams by program event division</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('get-teams-list-programId-eventId-divisionId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
@@ -8857,6 +8897,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/teams/{programId}/{eventId}/{divisionId}</span>
 <span class="endpoint-summary">Create Team</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('post-teams-programId-eventId-divisionId')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
@@ -8893,21 +8934,22 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/scheduled-games/assigned/{scheduledGameTeamAssnId}/roster</span>
 <span class="endpoint-summary">Assign a TeamPlayer to a game roster</span>
+<button class="endpoint-link-btn" onclick="event.stopPropagation(); copyEndpointLink('post-scheduled-games-assigned-scheduledGameTeamAssnId-roster')" title="Copy link to this endpoint">&#128279;</button>
 <span class="endpoint-chevron">&#9654;</span>
 </div>
 <div class="endpoint-body">
 <p class="endpoint-desc"></p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-ibfwjt1oc', 'opt-lrpkickn4')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-lrpkickn4', 'req-ibfwjt1oc')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-vdrbz4vgz', 'opt-e2vucpztx')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-e2vucpztx', 'req-vdrbz4vgz')">Optional</button>
 </div>
-<div id="req-ibfwjt1oc" class="param-tab-content active">
+<div id="req-vdrbz4vgz" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameTeamAssnId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game Team Assignment uuid to update</td></tr>
 </tbody></table>
 </div>
-<div id="opt-lrpkickn4" class="param-tab-content">
+<div id="opt-e2vucpztx" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8946,6 +8988,7 @@ function toggleTheme(){var h=document.documentElement,c=h.getAttribute('data-the
 function toggleEndpoint(h){h.parentElement.classList.toggle('open')}
 function switchParamTab(e,showId,hideId){e.target.parentElement.querySelectorAll('.param-tab').forEach(t=>t.classList.remove('active'));e.target.classList.add('active');document.getElementById(hideId).classList.remove('active');document.getElementById(showId).classList.add('active')}
 function copyCode(b){var p=b.closest('.code-block').querySelector('pre');navigator.clipboard.writeText(p.textContent).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},2000)}).catch(function(){var r=document.createRange();r.selectNodeContents(p);var s=window.getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges();b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},2000)})}
+function copyEndpointLink(endpointId){var url=window.location.origin+window.location.pathname+'#'+endpointId;navigator.clipboard.writeText(url).then(function(){var btn=event.target;var orig=btn.innerHTML;btn.innerHTML='&#10003;';btn.style.color='var(--sv-red)';setTimeout(function(){btn.innerHTML=orig;btn.style.color=''},1500)}).catch(function(){})}
 // Auto-open endpoint cards when navigating via anchor
 function openEndpointFromHash(){var h=window.location.hash;if(h){var el=document.querySelector(h);if(el&&el.classList.contains('endpoint-card')){el.classList.add('open');el.scrollIntoView({behavior:'smooth',block:'start'})}}}
 window.addEventListener('hashchange',openEndpointFromHash);

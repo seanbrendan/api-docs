@@ -342,8 +342,28 @@ h2 {
   margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 2px solid var(--sv-red);
+  position: relative;
+  scroll-margin-top: 72px;
 }
-h3 { font-size: 18px; font-weight: 600; margin-bottom: 12px; scroll-margin-top: 72px; }
+h2:hover::before,
+h3:hover::before {
+  content: '#';
+  position: absolute;
+  left: -20px;
+  color: var(--sv-red);
+  opacity: 0.5;
+  font-weight: 400;
+}
+h2:target,
+h3:target {
+  background: var(--accent-light);
+  margin-left: -12px;
+  margin-right: -12px;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 4px;
+}
+h3 { font-size: 18px; font-weight: 600; margin-bottom: 12px; scroll-margin-top: 72px; position: relative; }
 h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
 p { margin-bottom: 12px; font-size: 14px; }
 
@@ -460,6 +480,18 @@ p code, li code, td code {
 }
 .endpoint-card.open .endpoint-body { display: block; padding-top: 18px; }
 .endpoint-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+.endpoint-card {
+  scroll-margin-top: 72px;
+}
+.endpoint-card:target {
+  background: var(--accent-light);
+  border-left: 3px solid var(--sv-red);
+  margin-left: -3px;
+}
+.endpoint-card:target .endpoint-body {
+  display: block;
+  padding-top: 18px;
+}
 
 /* Parameter tables */
 .param-table {
@@ -1531,7 +1563,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <div class="tag-group" id="tag-users">
 <div class="tag-group-header"><h3>Users</h3><span class="tag-count">1 endpoint</span></div>
 
-<div class="endpoint-card" data-search="get users userid get user returns user record of the currently authenticated user, unless optional userid specified. userid authorization">
+<div class="endpoint-card" id="get-users-userId" data-search="get users userid get user returns user record of the currently authenticated user, unless optional userid specified. userid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/users/{userId}</span>
@@ -1746,7 +1778,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <div class="tag-group" id="tag-annotation-statistics">
 <div class="tag-group-header"><h3>Annotation Statistics</h3><span class="tag-count">1 endpoint</span></div>
 
-<div class="endpoint-card" data-search="get annotations stats game player rollup scheduledgameid rollup stats for each player in the specified game uuid scheduledgameid authorization">
+<div class="endpoint-card" id="get-annotations-stats-game-player-rollup-scheduledGameId" data-search="get annotations stats game player rollup scheduledgameid rollup stats for each player in the specified game uuid scheduledgameid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/annotations/stats/game-player-rollup/{scheduledGameId}</span>
@@ -1757,15 +1789,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc"></p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-no5837ie9', 'opt-p7ekc09n0')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-p7ekc09n0', 'req-no5837ie9')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-nlostswyy', 'opt-3b7klnk7f')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-3b7klnk7f', 'req-nlostswyy')">Optional</button>
 </div>
-<div id="req-no5837ie9" class="param-tab-content active">
+<div id="req-nlostswyy" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game uuid to fetch</td></tr>
 </tbody></table>
 </div>
-<div id="opt-p7ekc09n0" class="param-tab-content">
+<div id="opt-3b7klnk7f" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -4367,7 +4399,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <div class="tag-group" id="tag-uploads">
 <div class="tag-group-header"><h3>Uploads</h3><span class="tag-count">1 endpoint</span></div>
 
-<div class="endpoint-card" data-search="post upload upload image to cdn uploads an image to filestack cdn and returns a storeable filestack url for image. authorization">
+<div class="endpoint-card" id="post-upload" data-search="post upload upload image to cdn uploads an image to filestack cdn and returns a storeable filestack url for image. authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/upload</span>
@@ -4397,7 +4429,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <div class="tag-group" id="tag-multipart-uploads">
 <div class="tag-group-header"><h3>Multipart Uploads</h3><span class="tag-count">1 endpoint</span></div>
 
-<div class="endpoint-card" data-search="post upload multipart uploadid complete complete multipart upload completes the multipart upload and returns the final file url. optionally validates sha256 checksum. authorization uploadid">
+<div class="endpoint-card" id="post-upload-multipart-uploadId-complete" data-search="post upload multipart uploadid complete complete multipart upload completes the multipart upload and returns the final file url. optionally validates sha256 checksum. authorization uploadid">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/upload/multipart/{uploadId}/complete</span>
@@ -4408,15 +4440,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Completes the multipart upload and returns the final file URL. Optionally validates SHA256 checksum.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-7t8hq4c3x', 'opt-cdud2od4y')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-cdud2od4y', 'req-7t8hq4c3x')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-iersmrkpx', 'opt-w5ggdka8i')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-w5ggdka8i', 'req-iersmrkpx')">Optional</button>
 </div>
-<div id="req-7t8hq4c3x" class="param-tab-content active">
+<div id="req-iersmrkpx" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">uploadId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Multipart upload ID</td></tr>
 </tbody></table>
 </div>
-<div id="opt-cdud2od4y" class="param-tab-content">
+<div id="opt-w5ggdka8i" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -4438,7 +4470,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <div class="tag-group" id="tag-programs">
 <div class="tag-group-header"><h3>Programs</h3><span class="tag-count">1 endpoint</span></div>
 
-<div class="endpoint-card" data-search="get programs list accountid get paginated list of programs returns the programs of the specified accountid or currently authenticated user accountid column direction limit start sportid search programtype assigned havinggames private isapiclient includepeds authorization">
+<div class="endpoint-card" id="get-programs-list-accountId" data-search="get programs list accountid get paginated list of programs returns the programs of the specified accountid or currently authenticated user accountid column direction limit start sportid search programtype assigned havinggames private isapiclient includepeds authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/programs/list/{accountId}</span>
@@ -4535,7 +4567,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <div class="tag-group" id="tag-scheduled-games">
 <div class="tag-group-header"><h3>Scheduled Games</h3><span class="tag-count">5 endpoints</span></div>
 
-<div class="endpoint-card" data-search="post programs divisions teams programid eventid divisionid bulk add teams to division creates multiple division team assignment records programid eventid divisionid authorization">
+<div class="endpoint-card" id="post-programs-divisions-teams-programId-eventId-divisionId-bulk" data-search="post programs divisions teams programid eventid divisionid bulk add teams to division creates multiple division team assignment records programid eventid divisionid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/programs/divisions/teams/{programId}/{eventId}/{divisionId}/bulk</span>
@@ -4546,17 +4578,17 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Creates multiple division team assignment records</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-vpjwjv9oz', 'opt-ippifcinc')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-ippifcinc', 'req-vpjwjv9oz')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-6ksgkvx89', 'opt-7g5frgplg')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-7g5frgplg', 'req-6ksgkvx89')">Optional</button>
 </div>
-<div id="req-vpjwjv9oz" class="param-tab-content active">
+<div id="req-6ksgkvx89" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-ippifcinc" class="param-tab-content">
+<div id="opt-7g5frgplg" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -4575,7 +4607,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -d '{}'</code></pre></div>
 </div></div>
 
-<div class="endpoint-card" data-search="get programs divisions games list programid eventid divisionid get a list of scheduled games returns a list of scheduledgame records for the specified ped column direction limit start sportid search status before after teamids teamid isapiclient programid eventid divisionid column direction limit start sportid search status before after teamids teamid isapiclient authorization">
+<div class="endpoint-card" id="get-programs-divisions-games-list-programId-eventId-divisionId" data-search="get programs divisions games list programid eventid divisionid get a list of scheduled games returns a list of scheduledgame records for the specified ped column direction limit start sportid search status before after teamids teamid isapiclient programid eventid divisionid column direction limit start sportid search status before after teamids teamid isapiclient authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/programs/divisions/games/list/{programId}/{eventId}/{divisionId}</span>
@@ -4586,17 +4618,17 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Returns a list of ScheduledGame records for the specified PED</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-y91doowiw', 'opt-slx27jaki')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-slx27jaki', 'req-y91doowiw')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-loo8fk2t5', 'opt-udw32bw68')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-udw32bw68', 'req-loo8fk2t5')">Optional</button>
 </div>
-<div id="req-y91doowiw" class="param-tab-content active">
+<div id="req-loo8fk2t5" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-slx27jaki" class="param-tab-content">
+<div id="opt-udw32bw68" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">column</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Column to sort on</td></tr>
 <tr><td><span class="param-name">direction</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Sort order</td></tr>
@@ -4701,7 +4733,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -H &quot;Authorization: Bearer YOUR_TOKEN&quot;</code></pre></div>
 </div></div>
 
-<div class="endpoint-card" data-search="get scheduled games scheduledgameid get scheduledgame returns full scheduledgame record. scheduledgameid authorization">
+<div class="endpoint-card" id="get-scheduled-games-scheduledGameId" data-search="get scheduled games scheduledgameid get scheduledgame returns full scheduledgame record. scheduledgameid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/scheduled-games/{scheduledGameId}</span>
@@ -4712,15 +4744,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Returns full ScheduledGame record.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-l2l2dpj8r', 'opt-4dgieve18')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-4dgieve18', 'req-l2l2dpj8r')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-n5uvuqob8', 'opt-jahkjm0sl')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-jahkjm0sl', 'req-n5uvuqob8')">Optional</button>
 </div>
-<div id="req-l2l2dpj8r" class="param-tab-content active">
+<div id="req-n5uvuqob8" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game uuid to fetch</td></tr>
 </tbody></table>
 </div>
-<div id="opt-4dgieve18" class="param-tab-content">
+<div id="opt-jahkjm0sl" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8065,7 +8097,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -H &quot;Authorization: Bearer YOUR_TOKEN&quot;</code></pre></div>
 </div></div>
 
-<div class="endpoint-card" data-search="post scheduled games programid eventid divisionid create scheduledgame creates a scheduledgame record. programid eventid divisionid authorization">
+<div class="endpoint-card" id="post-scheduled-games-programId-eventId-divisionId" data-search="post scheduled games programid eventid divisionid create scheduledgame creates a scheduledgame record. programid eventid divisionid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/scheduled-games/{programId}/{eventId}/{divisionId}</span>
@@ -8076,17 +8108,17 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Creates a ScheduledGame record.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-sdl3c07pb', 'opt-6tlqsb0uw')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-6tlqsb0uw', 'req-sdl3c07pb')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-a8ome7ttw', 'opt-yuupwaj5w')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-yuupwaj5w', 'req-a8ome7ttw')">Optional</button>
 </div>
-<div id="req-sdl3c07pb" class="param-tab-content active">
+<div id="req-a8ome7ttw" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-6tlqsb0uw" class="param-tab-content">
+<div id="opt-yuupwaj5w" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8129,7 +8161,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -d '{}'</code></pre></div>
 </div></div>
 
-<div class="endpoint-card" data-search="get scheduled games insights scheduledgameid get scheduledgame insights get scheduledgame insights. scheduledgameid authorization">
+<div class="endpoint-card" id="get-scheduled-games-insights-scheduledGameId" data-search="get scheduled games insights scheduledgameid get scheduledgame insights get scheduledgame insights. scheduledgameid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/scheduled-games/insights/{scheduledGameId}</span>
@@ -8140,15 +8172,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Get ScheduledGame Insights.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-ujavb0tff', 'opt-oa1g9hgle')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-oa1g9hgle', 'req-ujavb0tff')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-jfhe3g7a9', 'opt-xiuy0kzwk')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-xiuy0kzwk', 'req-jfhe3g7a9')">Optional</button>
 </div>
-<div id="req-ujavb0tff" class="param-tab-content active">
+<div id="req-jfhe3g7a9" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game uuid to fetch</td></tr>
 </tbody></table>
 </div>
-<div id="opt-oa1g9hgle" class="param-tab-content">
+<div id="opt-xiuy0kzwk" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8198,7 +8230,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <div class="tag-group" id="tag-devices">
 <div class="tag-group-header"><h3>Devices</h3><span class="tag-count">5 endpoints</span></div>
 
-<div class="endpoint-card" data-search="get devices list accountid get a list of devices returns a list of device records for the currently authenticated user, unless accountid is specified. column direction limit start search accountid authorization">
+<div class="endpoint-card" id="get-devices-list-accountId" data-search="get devices list accountid get a list of devices returns a list of device records for the currently authenticated user, unless accountid is specified. column direction limit start search accountid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/devices/list/{accountId}</span>
@@ -8249,7 +8281,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -H &quot;Authorization: Bearer YOUR_TOKEN&quot;</code></pre></div>
 </div></div>
 
-<div class="endpoint-card" data-search="post devices register accountid register a new device creates device record and registers to account. accountid authorization">
+<div class="endpoint-card" id="post-devices-register-accountId" data-search="post devices register accountid register a new device creates device record and registers to account. accountid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/devices/register/{accountId}</span>
@@ -8280,7 +8312,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -d '{}'</code></pre></div>
 </div></div>
 
-<div class="endpoint-card" data-search="post devices attach scheduledgameid attach device to scheduled game attaches a device to the game for recording scheduledgameid authorization">
+<div class="endpoint-card" id="post-devices-attach-scheduledGameId" data-search="post devices attach scheduledgameid attach device to scheduled game attaches a device to the game for recording scheduledgameid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/devices/attach/{scheduledGameId}</span>
@@ -8291,15 +8323,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Attaches a device to the game for recording</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-dih6wxrev', 'opt-xccd7afhe')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-xccd7afhe', 'req-dih6wxrev')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-3cq1jzhl6', 'opt-jjszv178o')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-jjszv178o', 'req-3cq1jzhl6')">Optional</button>
 </div>
-<div id="req-dih6wxrev" class="param-tab-content active">
+<div id="req-3cq1jzhl6" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of scheduled game to attach to</td></tr>
 </tbody></table>
 </div>
-<div id="opt-xccd7afhe" class="param-tab-content">
+<div id="opt-jjszv178o" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8318,7 +8350,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -d '{}'</code></pre></div>
 </div></div>
 
-<div class="endpoint-card" data-search="get devices upload token scheduledgameid deviceid get upload token to upload source media authorization">
+<div class="endpoint-card" id="get-devices-upload-token-scheduledGameId-deviceId" data-search="get devices upload token scheduledgameid deviceid get upload token to upload source media authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/devices/upload-token/{scheduledGameId}/{deviceId}</span>
@@ -8344,7 +8376,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -H &quot;Authorization: Bearer YOUR_TOKEN&quot;</code></pre></div>
 </div></div>
 
-<div class="endpoint-card" data-search="post devices init upload multipart scheduledgameid deviceid initiate multipart upload for source media creates a multipart upload session for direct s3 upload of source media authorization">
+<div class="endpoint-card" id="post-devices-init-upload-multipart-scheduledGameId-deviceId" data-search="post devices init upload multipart scheduledgameid deviceid initiate multipart upload for source media creates a multipart upload session for direct s3 upload of source media authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/devices/init-upload-multipart/{scheduledGameId}/{deviceId}</span>
@@ -8390,7 +8422,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <div class="tag-group" id="tag-team-players">
 <div class="tag-group-header"><h3>Team Players</h3><span class="tag-count">3 endpoints</span></div>
 
-<div class="endpoint-card" data-search="post teams players teamid programid eventid divisionid create teamplayer creates a teamplayer record associated with team. programid eventid divisionid teamid authorization">
+<div class="endpoint-card" id="post-teams-players-teamId-programId-eventId-divisionId" data-search="post teams players teamid programid eventid divisionid create teamplayer creates a teamplayer record associated with team. programid eventid divisionid teamid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/teams/players/{teamId}/{programId}/{eventId}/{divisionId}</span>
@@ -8401,10 +8433,10 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Creates a TeamPlayer record associated with Team.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-cvtdxvpsy', 'opt-5apzwd11t')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-5apzwd11t', 'req-cvtdxvpsy')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-73gaje7ag', 'opt-wywp7aeg6')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-wywp7aeg6', 'req-73gaje7ag')">Optional</button>
 </div>
-<div id="req-cvtdxvpsy" class="param-tab-content active">
+<div id="req-73gaje7ag" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
@@ -8412,7 +8444,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of team to add player</td></tr>
 </tbody></table>
 </div>
-<div id="opt-5apzwd11t" class="param-tab-content">
+<div id="opt-wywp7aeg6" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8430,7 +8462,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -d '{}'</code></pre></div>
 </div></div>
 
-<div class="endpoint-card" data-search="get teams players division list teamid programid eventid divisionid get list of team players assigned to the team and program event division roster returns a list of team players records for the specified teamid and program event division roster. column direction limit start search hideinactive teamid programid eventid divisionid authorization">
+<div class="endpoint-card" id="get-teams-players-division-list-teamId-programId-eventId-divisionId" data-search="get teams players division list teamid programid eventid divisionid get list of team players assigned to the team and program event division roster returns a list of team players records for the specified teamid and program event division roster. column direction limit start search hideinactive teamid programid eventid divisionid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/teams/players/division/list/{teamId}/{programId}/{eventId}/{divisionId}</span>
@@ -8441,10 +8473,10 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Returns a list of Team Players records for the specified teamId and Program Event Division roster.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-35ag2wyea', 'opt-gzyersgtu')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-gzyersgtu', 'req-35ag2wyea')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-cyhgdl3vb', 'opt-l6flw9qzb')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-l6flw9qzb', 'req-cyhgdl3vb')">Optional</button>
 </div>
-<div id="req-35ag2wyea" class="param-tab-content active">
+<div id="req-cyhgdl3vb" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Team uuid to fetch</td></tr>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
@@ -8452,7 +8484,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-gzyersgtu" class="param-tab-content">
+<div id="opt-l6flw9qzb" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">column</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Column to sort on</td></tr>
 <tr><td><span class="param-name">direction</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Sort order</td></tr>
@@ -8697,7 +8729,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -H &quot;Authorization: Bearer YOUR_TOKEN&quot;</code></pre></div>
 </div></div>
 
-<div class="endpoint-card" data-search="post teams players division teamid programid eventid divisionid add teamplayers to division roster adds teamplayers to the specified program event division roster teamid programid eventid divisionid authorization">
+<div class="endpoint-card" id="post-teams-players-division-teamId-programId-eventId-divisionId" data-search="post teams players division teamid programid eventid divisionid add teamplayers to division roster adds teamplayers to the specified program event division roster teamid programid eventid divisionid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/teams/players/division/{teamId}/{programId}/{eventId}/{divisionId}</span>
@@ -8708,10 +8740,10 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Adds TeamPlayers to the specified Program Event Division roster</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-69s5herer', 'opt-af8txhwu7')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-af8txhwu7', 'req-69s5herer')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-1hpfgcosj', 'opt-noe9t9ohg')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-noe9t9ohg', 'req-1hpfgcosj')">Optional</button>
 </div>
-<div id="req-69s5herer" class="param-tab-content active">
+<div id="req-1hpfgcosj" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Team uuid to fetch</td></tr>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
@@ -8719,7 +8751,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-af8txhwu7" class="param-tab-content">
+<div id="opt-noe9t9ohg" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8741,7 +8773,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <div class="tag-group" id="tag-teams">
 <div class="tag-group-header"><h3>Teams</h3><span class="tag-count">2 endpoints</span></div>
 
-<div class="endpoint-card" data-search="get teams list programid eventid divisionid get a list of teams by program event division returns a list of teams associated with the specified program-event-division. column direction limit start sportid search programid withfinalapprovedonly havinggames column direction limit start sportid search programid withfinalapprovedonly havinggames authorization">
+<div class="endpoint-card" id="get-teams-list-programId-eventId-divisionId" data-search="get teams list programid eventid divisionid get a list of teams by program event division returns a list of teams associated with the specified program-event-division. column direction limit start sportid search programid withfinalapprovedonly havinggames column direction limit start sportid search programid withfinalapprovedonly havinggames authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge get">GET</span>
 <span class="endpoint-path">/teams/list/{programId}/{eventId}/{divisionId}</span>
@@ -8820,7 +8852,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -H &quot;Authorization: Bearer YOUR_TOKEN&quot;</code></pre></div>
 </div></div>
 
-<div class="endpoint-card" data-search="post teams programid eventid divisionid create team creates a team record. authorization">
+<div class="endpoint-card" id="post-teams-programId-eventId-divisionId" data-search="post teams programid eventid divisionid create team creates a team record. authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/teams/{programId}/{eventId}/{divisionId}</span>
@@ -8856,7 +8888,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <div class="tag-group" id="tag-scheduled-game-team-assignment">
 <div class="tag-group-header"><h3>Scheduled Game Team Assignment</h3><span class="tag-count">1 endpoint</span></div>
 
-<div class="endpoint-card" data-search="post scheduled games assigned scheduledgameteamassnid roster assign a teamplayer to a game roster scheduledgameteamassnid authorization">
+<div class="endpoint-card" id="post-scheduled-games-assigned-scheduledGameTeamAssnId-roster" data-search="post scheduled games assigned scheduledgameteamassnid roster assign a teamplayer to a game roster scheduledgameteamassnid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge post">POST</span>
 <span class="endpoint-path">/scheduled-games/assigned/{scheduledGameTeamAssnId}/roster</span>
@@ -8867,15 +8899,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc"></p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-mgtyvz0nf', 'opt-idufi88bi')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-idufi88bi', 'req-mgtyvz0nf')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-ibfwjt1oc', 'opt-lrpkickn4')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-lrpkickn4', 'req-ibfwjt1oc')">Optional</button>
 </div>
-<div id="req-mgtyvz0nf" class="param-tab-content active">
+<div id="req-ibfwjt1oc" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameTeamAssnId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game Team Assignment uuid to update</td></tr>
 </tbody></table>
 </div>
-<div id="opt-idufi88bi" class="param-tab-content">
+<div id="opt-lrpkickn4" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8914,6 +8946,12 @@ function toggleTheme(){var h=document.documentElement,c=h.getAttribute('data-the
 function toggleEndpoint(h){h.parentElement.classList.toggle('open')}
 function switchParamTab(e,showId,hideId){e.target.parentElement.querySelectorAll('.param-tab').forEach(t=>t.classList.remove('active'));e.target.classList.add('active');document.getElementById(hideId).classList.remove('active');document.getElementById(showId).classList.add('active')}
 function copyCode(b){var p=b.closest('.code-block').querySelector('pre');navigator.clipboard.writeText(p.textContent).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},2000)}).catch(function(){var r=document.createRange();r.selectNodeContents(p);var s=window.getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges();b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},2000)})}
+// Auto-open endpoint cards when navigating via anchor
+function openEndpointFromHash(){var h=window.location.hash;if(h){var el=document.querySelector(h);if(el&&el.classList.contains('endpoint-card')){el.classList.add('open');el.scrollIntoView({behavior:'smooth',block:'start'})}}}
+window.addEventListener('hashchange',openEndpointFromHash);
+window.addEventListener('load',openEndpointFromHash);
+// Make headers clickable
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('h2[id],h3[id]').forEach(function(h){h.style.cursor='pointer';h.addEventListener('click',function(){var id=this.id;if(id){window.location.hash=id;navigator.clipboard.writeText(window.location.href).then(function(){var orig=h.textContent;h.textContent=h.textContent+' (Link copied!)';setTimeout(function(){h.textContent=orig},1500)}).catch(function(){})}})})})
 var searchIndex=[];var searchSelectedIdx=-1;
 function buildSearchIndex(){
   searchIndex=[];

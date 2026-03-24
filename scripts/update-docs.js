@@ -326,7 +326,10 @@ function generateEndpointCard(method, path, operation, baseUrl, swagger) {
   const parameters = operation.parameters || [];
   const searchData = generateSearchData(method, path, summary, description, parameters);
 
-  return `<div class="endpoint-card" data-search="${escapeHtml(searchData)}">
+  // Generate a unique ID for the endpoint
+  const endpointId = `${method.toLowerCase()}-${path.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')}`;
+
+  return `<div class="endpoint-card" id="${endpointId}" data-search="${escapeHtml(searchData)}">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
 <span class="method-badge ${getMethodClass(method)}">${method.toUpperCase()}</span>
 <span class="endpoint-path">${escapeHtml(path)}</span>

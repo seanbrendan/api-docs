@@ -671,7 +671,7 @@ p code, li code, td code {
   <a href="#tag-uploads" class="sidebar-link" onclick="closeMobile()">Uploads <span class="link-badge post">1</span></a>
   <a href="#tag-multipart-uploads" class="sidebar-link" onclick="closeMobile()">Multipart Uploads <span class="link-badge post">1</span></a>
   <a href="#tag-programs" class="sidebar-link" onclick="closeMobile()">Programs <span class="link-badge get">1</span></a>
-  <a href="#tag-program-divisions" class="sidebar-link" onclick="closeMobile()">Program Divisions <span class="link-badge post">1</span></a>
+  <a href="#tag-program-divisions" class="sidebar-link" onclick="closeMobile()">Program Divisions <span class="link-badge mixed">2</span></a>
   <a href="#tag-devices" class="sidebar-link" onclick="closeMobile()">Devices <span class="link-badge mixed">5</span></a>
   <a href="#tag-team-players" class="sidebar-link" onclick="closeMobile()">Team Players <span class="link-badge mixed">3</span></a>
   <a href="#tag-teams" class="sidebar-link" onclick="closeMobile()">Teams <span class="link-badge post">1</span></a>
@@ -1568,7 +1568,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <!-- Program Divisions -->
 <div class="tag-group" id="tag-program-divisions">
-<div class="tag-group-header"><h3>Program Divisions</h3><span class="tag-count">1 endpoint</span></div>
+<div class="tag-group-header"><h3>Program Divisions</h3><span class="tag-count">2 endpoints</span></div>
 
 <div class="endpoint-card" data-search="post programs divisions teams programid eventid divisionid bulk add teams to division creates multiple division team assignment records programid eventid divisionid authorization">
 <div class="endpoint-header" onclick="toggleEndpoint(this)">
@@ -1594,6 +1594,42 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   -H &quot;Authorization: Bearer YOUR_TOKEN&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{}'</code></pre></div>
+</div></div>
+
+<div class="endpoint-card" data-search="get programs divisions games list programid eventid divisionid get a list of scheduled games returns a list of scheduledgame records for the specified ped column direction limit start sportid search status before after teamids teamid isapiclient programid eventid divisionid authorization">
+<div class="endpoint-header" onclick="toggleEndpoint(this)">
+<span class="method-badge get">GET</span>
+<span class="endpoint-path">/programs/divisions/games/list/{programId}/{eventId}/{divisionId}</span>
+<span class="endpoint-summary">Get a list of Scheduled Games</span>
+<span class="endpoint-chevron">&#9654;</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Returns a list of ScheduledGame records for the specified PED</p>
+<h4>Parameters</h4>
+<table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr><td><span class="param-name">column</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>Column to sort on</td></tr>
+<tr><td><span class="param-name">direction</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>Sort order</td></tr>
+<tr><td><span class="param-name">limit</span></td><td><span class="param-in">query</span></td><td><span class="param-type">number</span></td><td>No</td><td>Limit of records to return</td></tr>
+<tr><td><span class="param-name">start</span></td><td><span class="param-in">query</span></td><td><span class="param-type">number</span></td><td>No</td><td>Starting offset of return records</td></tr>
+<tr><td><span class="param-name">sportId</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>Search value to filter results by sport id</td></tr>
+<tr><td><span class="param-name">search</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>No</td><td>Search value to filter results by owner email, game description, arena / court location, or season.</td></tr>
+<tr><td><span class="param-name">status</span></td><td><span class="param-in">query</span></td><td><span class="param-type">array</span></td><td>No</td><td>Optional; Filter by game status</td></tr>
+<tr><td><span class="param-name">before</span></td><td><span class="param-in">query</span></td><td><span class="param-type">number</span></td><td>No</td><td>Optional; return results up to and including the specified Unix timestamp</td></tr>
+<tr><td><span class="param-name">after</span></td><td><span class="param-in">query</span></td><td><span class="param-type">number</span></td><td>No</td><td>Optional; return results after and including the specified Unix timestamp</td></tr>
+<tr><td><span class="param-name">teamIds</span></td><td><span class="param-in">query</span></td><td><span class="param-type">array</span></td><td>No</td><td>Array of Team uuids to limit search results</td></tr>
+<tr><td><span class="param-name">teamId</span></td><td><span class="param-in">query</span></td><td><span class="param-type">array</span></td><td>No</td><td>The id of the team to filter the results. This is different from `teamIds` that performs an OR search in the array of teamIds.</td></tr>
+<tr><td><span class="param-name">isApiClient</span></td><td><span class="param-in">query</span></td><td><span class="param-type">boolean</span></td><td>No</td><td>When true returns games that are flagged as clients of the API</td></tr>
+<tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Uuid of Program</td></tr>
+<tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Uuid of Event</td></tr>
+<tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Yes<span class="param-required">*</span></td><td>Uuid of Division</td></tr>
+<tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>No</td><td>Session token for current user</td></tr>
+</tbody></table>
+
+<div class="response-codes"><span class="response-code success">200 </span></div>
+
+<div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code>curl -X GET &quot;https://api.sportsvisio-api.com/programs/divisions/games/list/{programId}/{eventId}/{divisionId}&quot; \
+  -H &quot;Authorization: Bearer YOUR_TOKEN&quot;</code></pre></div>
 </div></div>
 
 </div>

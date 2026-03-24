@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "http-server docs -p 8080 -o",
     "start": "http-server docs -p 8080",
-    "update-docs": "node scripts/update-api-reference.js"
+    "update-docs": "node scripts/update-docs.js"
   },
   "keywords": [
     "api",

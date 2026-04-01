@@ -6,690 +6,10 @@
 <title>SportsVisio Public API Documentation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  /* SportsVisio Brand Colors */
-  --sv-red: #FF4C57;
-  --sv-black-1: #151515;
-  --sv-black-2: #202020;
-  --sv-gray-1: #666666;
-  --sv-gray-2: #999999;
-  --sv-gray-3: #C4C4C4;
-  --sv-gray-4: #DDDDDD;
-  --sv-cream: #FBF1D0;
-  --sv-orange: #FEC679;
-  --sv-coral: #FA7368;
-
-  --bg: #ffffff;
-  --bg-secondary: #f5f5f5;
-  --bg-sidebar: var(--sv-black-1);
-  --bg-sidebar-hover: var(--sv-black-2);
-  --bg-code: var(--sv-black-1);
-  --text: var(--sv-black-1);
-  --text-secondary: var(--sv-gray-1);
-  --text-sidebar: var(--sv-gray-3);
-  --text-sidebar-active: #ffffff;
-  --accent: var(--sv-red);
-  --accent-light: #fff0f1;
-  --border: var(--sv-gray-4);
-  --card-bg: #ffffff;
-  --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.12);
-  --get: #22c55e;
-  --get-bg: #f0fdf4;
-  --post: var(--sv-red);
-  --post-bg: #fff0f1;
-  --put: var(--sv-orange);
-  --put-bg: #fef9f0;
-  --delete: #ef4444;
-  --delete-bg: #fef2f2;
-  --patch: var(--sv-coral);
-  --patch-bg: #fff5f4;
-}
-[data-theme="dark"] {
-  --bg: var(--sv-black-1);
-  --bg-secondary: var(--sv-black-2);
-  --bg-sidebar: #0a0a0a;
-  --bg-sidebar-hover: var(--sv-black-1);
-  --bg-code: #0a0a0a;
-  --text: #e8e8e8;
-  --text-secondary: var(--sv-gray-2);
-  --border: #333333;
-  --card-bg: #000000;
-  --card-shadow: 0 1px 3px rgba(0,0,0,0.4);
-  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.5);
-  --accent-light: #2a1516;
-  --get-bg: #0f291a;
-  --post-bg: #2a1516;
-  --put-bg: #2a2010;
-  --delete-bg: #2a0f0f;
-  --patch-bg: #2a1514;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Roobert', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-}
-code, pre, .endpoint-path, .param-name { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; }
-
-/* Layout */
-.layout { display: flex; min-height: 100vh; }
-.sidebar {
-  width: 280px;
-  background: var(--bg-sidebar);
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  overflow-y: auto;
-  z-index: 100;
-  transition: transform 0.3s;
-}
-.main { margin-left: 280px; flex: 1; min-width: 0; }
-
-/* Sidebar */
-.sidebar-header {
-  padding: 24px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.sidebar-logo {
-  font-size: 20px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.5px;
-}
-.sidebar-logo span { color: var(--sv-red); }
-.sidebar-subtitle {
-  font-size: 11px;
-  color: var(--text-sidebar);
-  margin-top: 4px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.sidebar-nav { padding: 12px 0; }
-.sidebar-section {
-  padding: 8px 20px 4px;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: rgba(255,255,255,0.35);
-  margin-top: 8px;
-}
-.sidebar-link {
-  display: flex;
-  align-items: center;
-  padding: 8px 20px 8px 24px;
-  color: var(--text-sidebar);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 400;
-  transition: all 0.15s;
-  border-left: 3px solid transparent;
-}
-.sidebar-link:hover {
-  background: var(--bg-sidebar-hover);
-  color: #fff;
-}
-.sidebar-link.active {
-  color: var(--text-sidebar-active);
-  background: var(--bg-sidebar-hover);
-  border-left-color: var(--accent);
-  font-weight: 500;
-}
-.sidebar-link .link-badge {
-  margin-left: auto;
-  font-size: 10px;
-  padding: 1px 6px;
-  border-radius: 10px;
-  font-weight: 600;
-}
-.sidebar-link .link-badge.get { background: var(--get); color: #fff; }
-.sidebar-link .link-badge.post { background: var(--post); color: #fff; }
-.sidebar-link .link-badge.mixed { background: var(--accent); color: #fff; }
-.sidebar-link.sub {
-  padding-left: 36px;
-  font-size: 12px;
-  opacity: 0.8;
-}
-.sidebar-link.sub:hover { opacity: 1; }
-
-/* Top bar */
-.topbar {
-  position: sticky;
-  top: 0;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 0 32px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 50;
-  backdrop-filter: blur(8px);
-}
-.topbar-left { display: flex; align-items: center; gap: 12px; }
-.hamburger {
-  display: none;
-  background: none;
-  border: none;
-  color: var(--text);
-  font-size: 24px;
-  cursor: pointer;
-  padding: 4px;
-}
-.search-box {
-  position: relative;
-}
-.search-box input {
-  padding: 8px 12px 8px 36px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: inherit;
-  background: var(--bg-secondary);
-  color: var(--text);
-  width: 280px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.search-box input:focus { border-color: var(--accent); }
-.search-box::before {
-  content: "\1F50D";
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-  opacity: 0.5;
-}
-.search-results {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  margin-top: 4px;
-  max-height: 400px;
-  overflow-y: auto;
-  box-shadow: var(--card-shadow-hover);
-  z-index: 1000;
-  display: none;
-}
-.search-results.visible { display: block; }
-.search-result-item {
-  padding: 10px 14px;
-  cursor: pointer;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-}
-.search-result-item:last-child { border-bottom: none; }
-.search-result-item:hover, .search-result-item.selected { background: var(--bg-secondary); }
-.search-result-section {
-  font-size: 10px;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 2px;
-}
-.search-result-title { font-weight: 500; }
-.search-result-context {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-top: 2px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.search-result-context mark {
-  background: var(--sv-orange);
-  color: var(--sv-black-1);
-  padding: 0 2px;
-  border-radius: 2px;
-}
-.search-no-results {
-  padding: 16px;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 13px;
-}
-.topbar-right { display: flex; align-items: center; gap: 12px; }
-#themeBtn {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 6px 10px;
-  cursor: pointer;
-  font-size: 16px;
-  color: var(--text);
-  transition: background 0.2s;
-}
-#themeBtn:hover { background: var(--bg-secondary); }
-.version-badge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 12px;
-  background: var(--accent-light);
-  color: var(--sv-red);
-}
-
-/* Content */
-.content { max-width: 960px; margin: 0 auto; padding: 32px; }
-.section { margin-bottom: 48px; scroll-margin-top: 72px; }
-
-/* Hero */
-.hero {
-  background: linear-gradient(135deg, var(--sv-cream) 0%, var(--sv-orange) 33%, var(--sv-coral) 66%, var(--sv-red) 100%);
-  border-radius: 16px;
-  padding: 48px 40px;
-  color: var(--sv-black-1);
-  margin-bottom: 40px;
-  scroll-margin-top: 72px;
-}
-.hero h1 {
-  font-family: 'Lateral Compressed', 'Roobert', 'Inter', sans-serif;
-  font-size: 36px;
-  font-weight: 900;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-  color: var(--sv-black-1);
-}
-.hero p { color: var(--sv-black-2); font-size: 16px; max-width: 600px; font-weight: 500; }
-.hero-meta {
-  display: flex;
-  gap: 24px;
-  margin-top: 20px;
-  font-size: 13px;
-}
-.hero-meta-item { display: flex; align-items: center; gap: 6px; color: var(--sv-gray-1); }
-.hero-meta-item strong { color: var(--sv-black-1); }
-
-/* Quick links */
-.quick-links {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 40px;
-}
-.quick-link {
-  display: block;
-  padding: 20px;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  text-decoration: none;
-  color: var(--text);
-  transition: all 0.2s;
-  box-shadow: var(--card-shadow);
-}
-.quick-link:hover { box-shadow: var(--card-shadow-hover); border-color: var(--accent); transform: translateY(-2px); }
-.quick-link-icon { font-size: 24px; margin-bottom: 8px; }
-.quick-link-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-.quick-link-desc { font-size: 12px; color: var(--text-secondary); }
-
-/* Section headers */
-h2 {
-  font-family: 'Roobert', 'Inter', sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--sv-red);
-  position: relative;
-  scroll-margin-top: 72px;
-}
-h2:hover::before,
-h3:hover::before {
-  content: '#';
-  position: absolute;
-  left: -20px;
-  color: var(--sv-red);
-  opacity: 0.5;
-  font-weight: 400;
-}
-h2:target,
-h3:target {
-  background: var(--accent-light);
-  margin-left: -12px;
-  margin-right: -12px;
-  padding-left: 12px;
-  padding-right: 12px;
-  border-radius: 4px;
-}
-h3 { font-size: 18px; font-weight: 600; margin-bottom: 12px; scroll-margin-top: 72px; position: relative; }
-h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-p { margin-bottom: 12px; font-size: 14px; }
-
-/* Code blocks */
-.code-block {
-  background: var(--bg-code);
-  border-radius: 10px;
-  overflow: hidden;
-  margin: 12px 0;
-}
-.code-block-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 16px;
-  background: rgba(255,255,255,0.05);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  font-size: 12px;
-  color: #94a3b8;
-}
-.copy-btn {
-  background: rgba(255,255,255,0.1);
-  border: none;
-  color: #94a3b8;
-  padding: 3px 10px;
-  border-radius: 4px;
-  font-size: 11px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.2s;
-}
-.copy-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
-pre {
-  padding: 16px;
-  overflow-x: auto;
-  font-size: 13px;
-  line-height: 1.5;
-  color: #e2e8f0;
-}
-code { font-size: 13px; }
-p code, li code, td code {
-  background: var(--bg-secondary);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  color: var(--sv-red);
-  border: 1px solid var(--border);
-}
-
-/* Method badges */
-.method-badge {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  flex-shrink: 0;
-}
-.method-badge.get { background: var(--get-bg); color: var(--get); }
-.method-badge.post { background: var(--post-bg); color: var(--post); }
-.method-badge.put { background: var(--put-bg); color: var(--put); }
-.method-badge.delete { background: var(--delete-bg); color: var(--delete); }
-
-/* Endpoint cards */
-.tag-group { margin-bottom: 32px; scroll-margin-top: 72px; }
-.tag-group-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-.tag-group-header h3 { margin-bottom: 0; }
-.tag-count {
-  font-size: 12px;
-  color: var(--text-secondary);
-  background: var(--bg-secondary);
-  padding: 3px 10px;
-  border-radius: 12px;
-}
-.endpoint-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  margin-bottom: 10px;
-  overflow: hidden;
-  transition: box-shadow 0.2s;
-}
-.endpoint-card:hover { box-shadow: var(--card-shadow-hover); }
-.endpoint-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  cursor: pointer;
-  user-select: none;
-  transition: background 0.15s;
-}
-.endpoint-header:hover { background: var(--bg-secondary); }
-.endpoint-path { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; }
-.endpoint-summary { font-size: 12px; color: var(--text-secondary); margin-right: 8px; }
-.endpoint-link-btn {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 16px;
-  padding: 4px 6px;
-  border-radius: 4px;
-  opacity: 0;
-  transition: opacity 0.2s, background 0.2s, color 0.2s;
-  line-height: 1;
-  flex-shrink: 0;
-}
-.endpoint-header:hover .endpoint-link-btn {
-  opacity: 1;
-}
-.endpoint-link-btn:hover {
-  background: var(--accent-light);
-  color: var(--sv-red);
-}
-.endpoint-chevron {
-  font-size: 10px;
-  color: var(--text-secondary);
-  transition: transform 0.2s;
-}
-.endpoint-card.open .endpoint-chevron { transform: rotate(90deg); }
-.endpoint-body {
-  display: none;
-  padding: 0 18px 18px;
-  border-top: 1px solid var(--border);
-}
-.endpoint-card.open .endpoint-body { display: block; padding-top: 18px; }
-.endpoint-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
-.endpoint-card {
-  scroll-margin-top: 72px;
-}
-.endpoint-card:target {
-  background: var(--accent-light);
-  border-left: 3px solid var(--sv-red);
-  margin-left: -3px;
-}
-.endpoint-card:target .endpoint-body {
-  display: block;
-  padding-top: 18px;
-}
-
-/* Parameter tables */
-.param-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-  margin-bottom: 16px;
-}
-.param-table th {
-  text-align: left;
-  padding: 8px 12px;
-  background: var(--bg-secondary);
-  font-weight: 600;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-secondary);
-  border-bottom: 2px solid var(--border);
-}
-.param-table td {
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-.param-table tr:last-child td { border-bottom: none; }
-.param-name { font-weight: 500; color: var(--sv-red); font-size: 12px; }
-.param-type { font-size: 11px; color: var(--text-secondary); background: var(--bg-secondary); padding: 1px 6px; border-radius: 4px; }
-.param-in { font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--bg-secondary); color: var(--text-secondary); }
-.param-required { color: var(--delete); font-weight: 700; margin-left: 2px; }
-
-/* Parameter tabs */
-.param-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-}
-.param-tab {
-  padding: 8px 16px;
-  font-size: 12px;
-  font-weight: 500;
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  transition: all 0.2s;
-}
-.param-tab:hover {
-  color: var(--text-primary);
-  background: var(--bg-secondary);
-}
-.param-tab.active {
-  color: var(--sv-red);
-  border-bottom-color: var(--sv-red);
-}
-.param-tab-content {
-  display: none;
-}
-.param-tab-content.active {
-  display: block;
-}
-
-/* Response codes */
-.response-codes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-.response-code {
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-weight: 500;
-}
-.response-code.success { background: var(--get-bg); color: var(--get); }
-.response-code.client-error { background: var(--delete-bg); color: var(--delete); }
-
-/* Scenario section */
-.scenario-step {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 16px;
-}
-.scenario-step-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.step-number {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-.scenario-step h4 { margin-bottom: 0; }
-
-/* Info boxes */
-.info-box {
-  padding: 16px 20px;
-  border-radius: 8px;
-  margin: 16px 0;
-  font-size: 13px;
-  border-left: 4px solid;
-}
-.info-box.info { background: var(--post-bg); border-color: var(--post); }
-.info-box.warning { background: var(--put-bg); border-color: var(--put); }
-.info-box.tip { background: var(--get-bg); border-color: var(--get); }
-
-/* Hidden endpoint cards */
-.endpoint-card.hidden { display: none; }
-#no-results {
-  text-align: center;
-  padding: 40px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  display: none;
-}
-#no-results.visible { display: block; }
-
-/* Footer */
-.footer {
-  text-align: center;
-  padding: 32px;
-  border-top: 1px solid var(--border);
-  color: var(--text-secondary);
-  font-size: 12px;
-  margin-top: 48px;
-}
-.footer a { color: var(--sv-red); text-decoration: none; }
-
-/* Back to top */
-.back-to-top {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s;
-  z-index: 50;
-  box-shadow: 0 4px 12px rgba(255,76,87,0.4);
-}
-.back-to-top.visible { opacity: 1; transform: translateY(0); }
-
-/* Responsive */
-@media (max-width: 900px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.3); }
-  .main { margin-left: 0; }
-  .hamburger { display: block; }
-  .content { padding: 20px; }
-  .hero { padding: 32px 24px; }
-  .hero h1 { font-size: 24px; }
-  .search-box input { width: 180px; }
-  .endpoint-header { flex-wrap: wrap; }
-  .endpoint-summary { display: none; }
-}
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 
 <div class="layout">
 
@@ -727,7 +47,7 @@ p code, li code, td code {
   <a href="#tag-scheduled-games" class="sidebar-link" onclick="closeMobile()">Scheduled Games <span class="link-badge mixed">5</span></a>
   <a href="#tag-devices" class="sidebar-link" onclick="closeMobile()">Devices <span class="link-badge mixed">5</span></a>
   <a href="#tag-team-players" class="sidebar-link" onclick="closeMobile()">Team Players <span class="link-badge mixed">3</span></a>
-  <a href="#tag-teams" class="sidebar-link" onclick="closeMobile()">Teams <span class="link-badge post">1</span></a>
+  <a href="#tag-teams" class="sidebar-link" onclick="closeMobile()">Teams <span class="link-badge mixed">2</span></a>
   <a href="#tag-scheduled-game-team-assignment" class="sidebar-link" onclick="closeMobile()">Scheduled Game Team Assignment <span class="link-badge post">1</span></a>
 
 </div>
@@ -1707,8 +1027,18 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 User found.</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body response-body-collapsed" id="get-users-userId-response-200" data-lines="185">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('get-users-userId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;id&quot;: &quot;7a5e7bf4-ad48-4a01-b64b-46f515de2c86&quot;,
   &quot;createdAt&quot;: &quot;string&quot;,
   &quot;updatedAt&quot;: &quot;string&quot;,
@@ -1892,7 +1222,9 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
       &quot;companyRole&quot;: &quot;string&quot;
     }
   }
-}</code></pre></div>
+}</code>
+</div><div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all 185 lines</button></div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X GET &quot;https://api.sportsvisio-api.com/users/{userId}&quot; \
@@ -1917,15 +1249,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc"></p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-t0gf78cc2', 'opt-q2adav06u')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-q2adav06u', 'req-t0gf78cc2')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-o1f6l1wot', 'opt-26nhlphxa')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-26nhlphxa', 'req-o1f6l1wot')">Optional</button>
 </div>
-<div id="req-t0gf78cc2" class="param-tab-content active">
+<div id="req-o1f6l1wot" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game uuid to fetch</td></tr>
 </tbody></table>
 </div>
-<div id="opt-q2adav06u" class="param-tab-content">
+<div id="opt-26nhlphxa" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -1933,8 +1265,18 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 Success</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>[
+<div class="response-body response-body-collapsed" id="get-annotations-stats-game-player-rollup-scheduledGameId-response-200" data-lines="2581">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('get-annotations-stats-game-player-rollup-scheduledGameId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">[
   {
     &quot;id&quot;: &quot;7a5e7bf4-ad48-4a01-b64b-46f515de2c86&quot;,
     &quot;createdAt&quot;: &quot;string&quot;,
@@ -4514,7 +3856,9 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
       ]
     }
   }
-]</code></pre></div>
+]</code>
+</div><div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all 2581 lines</button></div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X GET &quot;https://api.sportsvisio-api.com/annotations/stats/game-player-rollup/{scheduledGameId}&quot; \
@@ -4570,15 +3914,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Completes the multipart upload and returns the final file URL. Optionally validates SHA256 checksum.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-fy511hk25', 'opt-omn8bcgyw')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-omn8bcgyw', 'req-fy511hk25')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-o30ijtiiv', 'opt-tq1l7gpjx')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-tq1l7gpjx', 'req-o30ijtiiv')">Optional</button>
 </div>
-<div id="req-fy511hk25" class="param-tab-content active">
+<div id="req-o30ijtiiv" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">uploadId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Multipart upload ID</td></tr>
 </tbody></table>
 </div>
-<div id="opt-omn8bcgyw" class="param-tab-content">
+<div id="opt-tq1l7gpjx" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -4630,8 +3974,18 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 </span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body response-body-collapsed" id="get-programs-list-accountId-response-200" data-lines="55">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('get-programs-list-accountId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;meta&quot;: {
     &quot;total&quot;: 0,
     &quot;returned&quot;: 0,
@@ -4685,7 +4039,9 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
       }
     }
   ]
-}</code></pre></div>
+}</code>
+</div><div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all 55 lines</button></div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X GET &quot;https://api.sportsvisio-api.com/programs/list/{accountId}&quot; \
@@ -4710,17 +4066,17 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Creates multiple division team assignment records</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-ukyxq456e', 'opt-uzzy7ww7t')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-uzzy7ww7t', 'req-ukyxq456e')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-zmy8movyd', 'opt-rjds499fq')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-rjds499fq', 'req-zmy8movyd')">Optional</button>
 </div>
-<div id="req-ukyxq456e" class="param-tab-content active">
+<div id="req-zmy8movyd" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-uzzy7ww7t" class="param-tab-content">
+<div id="opt-rjds499fq" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -4728,8 +4084,20 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 Success.</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>true</code></pre></div>
+<div class="response-body" id="post-programs-divisions-teams-programId-eventId-divisionId-bulk-response-200" data-lines="1">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('post-programs-divisions-teams-programId-eventId-divisionId-bulk-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">true</code>
+</div></div>
+</div>
 <div class="response-codes"><span class="response-code client-error">404 Division not found.</span></div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
@@ -4751,17 +4119,17 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Returns a list of ScheduledGame records for the specified PED</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-4mxbmny73', 'opt-zds7bwwm3')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-zds7bwwm3', 'req-4mxbmny73')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-f03cxobfo', 'opt-ys80a6apt')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-ys80a6apt', 'req-f03cxobfo')">Optional</button>
 </div>
-<div id="req-4mxbmny73" class="param-tab-content active">
+<div id="req-f03cxobfo" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-zds7bwwm3" class="param-tab-content">
+<div id="opt-ys80a6apt" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">column</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Column to sort on</td></tr>
 <tr><td><span class="param-name">direction</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Sort order</td></tr>
@@ -4793,8 +4161,18 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 </span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body response-body-collapsed" id="get-programs-divisions-games-list-programId-eventId-divisionId-response-200" data-lines="66">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('get-programs-divisions-games-list-programId-eventId-divisionId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;meta&quot;: {
     &quot;total&quot;: 0,
     &quot;returned&quot;: 0,
@@ -4859,7 +4237,9 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
       ]
     }
   ]
-}</code></pre></div>
+}</code>
+</div><div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all 66 lines</button></div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X GET &quot;https://api.sportsvisio-api.com/programs/divisions/games/list/{programId}/{eventId}/{divisionId}&quot; \
@@ -4878,15 +4258,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Returns full ScheduledGame record.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-locei3jcq', 'opt-ot786idn1')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-ot786idn1', 'req-locei3jcq')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-i3q6vdh1p', 'opt-98ra1kx96')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-98ra1kx96', 'req-i3q6vdh1p')">Optional</button>
 </div>
-<div id="req-locei3jcq" class="param-tab-content active">
+<div id="req-i3q6vdh1p" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game uuid to fetch</td></tr>
 </tbody></table>
 </div>
-<div id="opt-ot786idn1" class="param-tab-content">
+<div id="opt-98ra1kx96" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -4894,8 +4274,18 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 Success.</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body response-body-collapsed" id="get-scheduled-games-scheduledGameId-response-200" data-lines="3330">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('get-scheduled-games-scheduledGameId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;id&quot;: &quot;7a5e7bf4-ad48-4a01-b64b-46f515de2c86&quot;,
   &quot;createdAt&quot;: &quot;string&quot;,
   &quot;updatedAt&quot;: &quot;string&quot;,
@@ -8224,7 +7614,9 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
     &quot;coachInsights&quot;: &quot;string&quot;,
     &quot;aiSummary&quot;: &quot;string&quot;
   }
-}</code></pre></div>
+}</code>
+</div><div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all 3330 lines</button></div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X GET &quot;https://api.sportsvisio-api.com/scheduled-games/{scheduledGameId}&quot; \
@@ -8243,17 +7635,17 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Creates a ScheduledGame record.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-zrwdiw3ys', 'opt-7zcnitby9')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-7zcnitby9', 'req-zrwdiw3ys')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-5v8rk8ww0', 'opt-dnktrerkw')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-dnktrerkw', 'req-5v8rk8ww0')">Optional</button>
 </div>
-<div id="req-zrwdiw3ys" class="param-tab-content active">
+<div id="req-5v8rk8ww0" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-7zcnitby9" class="param-tab-content">
+<div id="opt-dnktrerkw" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8261,8 +7653,18 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 Success.</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body response-body-collapsed" id="post-scheduled-games-programId-eventId-divisionId-response-200" data-lines="26">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('post-scheduled-games-programId-eventId-divisionId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;id&quot;: &quot;7a5e7bf4-ad48-4a01-b64b-46f515de2c86&quot;,
   &quot;createdAt&quot;: &quot;string&quot;,
   &quot;updatedAt&quot;: &quot;string&quot;,
@@ -8287,7 +7689,9 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
     &quot;devMode&quot;: true
   },
   &quot;shortChart&quot;: true
-}</code></pre></div>
+}</code>
+</div><div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all 26 lines</button></div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X POST &quot;https://api.sportsvisio-api.com/scheduled-games/{programId}/{eventId}/{divisionId}&quot; \
@@ -8308,15 +7712,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Get ScheduledGame Insights.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-z5rsnuhrl', 'opt-wqfms7ko5')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-wqfms7ko5', 'req-z5rsnuhrl')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-7djz2e9qx', 'opt-vu3bm9sid')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-vu3bm9sid', 'req-7djz2e9qx')">Optional</button>
 </div>
-<div id="req-z5rsnuhrl" class="param-tab-content active">
+<div id="req-7djz2e9qx" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game uuid to fetch</td></tr>
 </tbody></table>
 </div>
-<div id="opt-wqfms7ko5" class="param-tab-content">
+<div id="opt-vu3bm9sid" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8324,8 +7728,18 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 Success.</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body response-body-collapsed" id="get-scheduled-games-insights-scheduledGameId-response-200" data-lines="29">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('get-scheduled-games-insights-scheduledGameId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;id&quot;: &quot;7a5e7bf4-ad48-4a01-b64b-46f515de2c86&quot;,
   &quot;createdAt&quot;: &quot;string&quot;,
   &quot;updatedAt&quot;: &quot;string&quot;,
@@ -8353,7 +7767,9 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
   },
   &quot;coachInsights&quot;: &quot;string&quot;,
   &quot;aiSummary&quot;: &quot;string&quot;
-}</code></pre></div>
+}</code>
+</div><div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all 29 lines</button></div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X GET &quot;https://api.sportsvisio-api.com/scheduled-games/insights/{scheduledGameId}&quot; \
@@ -8389,8 +7805,18 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 </span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body response-body-collapsed" id="get-devices-list-accountId-response-200" data-lines="22">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('get-devices-list-accountId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;meta&quot;: {
     &quot;total&quot;: 0,
     &quot;returned&quot;: 0,
@@ -8411,7 +7837,9 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
       }
     }
   ]
-}</code></pre></div>
+}</code>
+</div><div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all 22 lines</button></div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X GET &quot;https://api.sportsvisio-api.com/devices/list/{accountId}&quot; \
@@ -8436,12 +7864,24 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 Success</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body" id="post-devices-register-accountId-response-200" data-lines="5">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('post-devices-register-accountId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;id&quot;: &quot;7a5e7bf4-ad48-4a01-b64b-46f515de2c86&quot;,
   &quot;createdAt&quot;: &quot;string&quot;,
   &quot;updatedAt&quot;: &quot;string&quot;
-}</code></pre></div>
+}</code>
+</div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X POST &quot;https://api.sportsvisio-api.com/devices/register/{accountId}&quot; \
@@ -8462,15 +7902,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Attaches a device to the game for recording</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-iobkva2mx', 'opt-w5tiiwdpn')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-w5tiiwdpn', 'req-iobkva2mx')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-j82jajnye', 'opt-6d32x07tw')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-6d32x07tw', 'req-j82jajnye')">Optional</button>
 </div>
-<div id="req-iobkva2mx" class="param-tab-content active">
+<div id="req-j82jajnye" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of scheduled game to attach to</td></tr>
 </tbody></table>
 </div>
-<div id="opt-w5tiiwdpn" class="param-tab-content">
+<div id="opt-6d32x07tw" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8478,8 +7918,20 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 Success</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>true</code></pre></div>
+<div class="response-body" id="post-devices-attach-scheduledGameId-response-200" data-lines="1">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('post-devices-attach-scheduledGameId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">true</code>
+</div></div>
+</div>
 <div class="response-codes"><span class="response-code client-error">404 Not found</span></div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
@@ -8506,10 +7958,22 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 Success</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body" id="get-devices-upload-token-scheduledGameId-deviceId-response-200" data-lines="3">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('get-devices-upload-token-scheduledGameId-deviceId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;token&quot;: &quot;string&quot;
-}</code></pre></div>
+}</code>
+</div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X GET &quot;https://api.sportsvisio-api.com/devices/upload-token/{scheduledGameId}/{deviceId}&quot; \
@@ -8533,8 +7997,18 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">201 Multipart upload session created successfully</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body response-body-collapsed" id="post-devices-init-upload-multipart-scheduledGameId-deviceId-response-201" data-lines="15">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (201)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('post-devices-init-upload-multipart-scheduledGameId-deviceId-response-201', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;uploadInfo&quot;: {
     &quot;uploadId&quot;: &quot;string&quot;,
     &quot;bucket&quot;: &quot;string&quot;,
@@ -8548,7 +8022,9 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
       &quot;uploadUrl&quot;: &quot;string&quot;
     }
   ]
-}</code></pre></div>
+}</code>
+</div><div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all 15 lines</button></div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X POST &quot;https://api.sportsvisio-api.com/devices/init-upload-multipart/{scheduledGameId}/{deviceId}&quot; \
@@ -8575,10 +8051,10 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Creates a TeamPlayer record associated with Team.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-883i311jl', 'opt-fy5xerdrb')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-fy5xerdrb', 'req-883i311jl')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-nerf3ag8g', 'opt-r5t7r3m9h')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-r5t7r3m9h', 'req-nerf3ag8g')">Optional</button>
 </div>
-<div id="req-883i311jl" class="param-tab-content active">
+<div id="req-nerf3ag8g" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
 <tr><td><span class="param-name">eventId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Event</td></tr>
@@ -8586,7 +8062,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of team to add player</td></tr>
 </tbody></table>
 </div>
-<div id="opt-fy5xerdrb" class="param-tab-content">
+<div id="opt-r5t7r3m9h" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8594,8 +8070,20 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 Success.</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>true</code></pre></div>
+<div class="response-body" id="post-teams-players-teamId-programId-eventId-divisionId-response-200" data-lines="1">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('post-teams-players-teamId-programId-eventId-divisionId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">true</code>
+</div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X POST &quot;https://api.sportsvisio-api.com/teams/players/{teamId}/{programId}/{eventId}/{divisionId}&quot; \
@@ -8616,10 +8104,10 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Returns a list of Team Players records for the specified teamId and Program Event Division roster.</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-q885lajvt', 'opt-dvf95jqo1')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-dvf95jqo1', 'req-q885lajvt')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-w98lbf77h', 'opt-64pyuhrac')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-64pyuhrac', 'req-w98lbf77h')">Optional</button>
 </div>
-<div id="req-q885lajvt" class="param-tab-content active">
+<div id="req-w98lbf77h" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Team uuid to fetch</td></tr>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
@@ -8627,7 +8115,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-dvf95jqo1" class="param-tab-content">
+<div id="opt-64pyuhrac" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">column</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Column to sort on</td></tr>
 <tr><td><span class="param-name">direction</span></td><td><span class="param-in">query</span></td><td><span class="param-type">string</span></td><td>Sort order</td></tr>
@@ -8641,8 +8129,18 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 </span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body response-body-collapsed" id="get-teams-players-division-list-teamId-programId-eventId-divisionId-response-200" data-lines="224">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('get-teams-players-division-list-teamId-programId-eventId-divisionId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;meta&quot;: {
     &quot;total&quot;: 0,
     &quot;returned&quot;: 0,
@@ -8865,7 +8363,9 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
       }
     }
   ]
-}</code></pre></div>
+}</code>
+</div><div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all 224 lines</button></div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X GET &quot;https://api.sportsvisio-api.com/teams/players/division/list/{teamId}/{programId}/{eventId}/{divisionId}&quot; \
@@ -8884,10 +8384,10 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc">Adds TeamPlayers to the specified Program Event Division roster</p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-tvj3jjw5t', 'opt-fq4updhos')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-fq4updhos', 'req-tvj3jjw5t')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-7hi2qhb93', 'opt-rxs75fesb')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-rxs75fesb', 'req-7hi2qhb93')">Optional</button>
 </div>
-<div id="req-tvj3jjw5t" class="param-tab-content active">
+<div id="req-7hi2qhb93" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">teamId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Team uuid to fetch</td></tr>
 <tr><td><span class="param-name">programId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Program</td></tr>
@@ -8895,7 +8395,7 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <tr><td><span class="param-name">divisionId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Uuid of Division</td></tr>
 </tbody></table>
 </div>
-<div id="opt-fq4updhos" class="param-tab-content">
+<div id="opt-rxs75fesb" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -8952,8 +8452,18 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 </span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body response-body-collapsed" id="get-teams-list-programId-eventId-divisionId-response-200" data-lines="38">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('get-teams-list-programId-eventId-divisionId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;meta&quot;: {
     &quot;total&quot;: 0,
     &quot;returned&quot;: 0,
@@ -8990,7 +8500,9 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
       }
     }
   ]
-}</code></pre></div>
+}</code>
+</div><div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all 38 lines</button></div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X GET &quot;https://api.sportsvisio-api.com/teams/list/{programId}/{eventId}/{divisionId}&quot; \
@@ -9014,12 +8526,24 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 Success.</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>{
+<div class="response-body" id="post-teams-programId-eventId-divisionId-response-200" data-lines="5">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('post-teams-programId-eventId-divisionId-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">{
   &quot;id&quot;: &quot;7a5e7bf4-ad48-4a01-b64b-46f515de2c86&quot;,
   &quot;createdAt&quot;: &quot;string&quot;,
   &quot;updatedAt&quot;: &quot;string&quot;
-}</code></pre></div>
+}</code>
+</div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X POST &quot;https://api.sportsvisio-api.com/teams/{programId}/{eventId}/{divisionId}&quot; \
@@ -9046,15 +8570,15 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 <p class="endpoint-desc"></p>
 <h4>Parameters</h4>
 <div class="param-tabs">
-<button class="param-tab active" onclick="switchParamTab(event, 'req-o5wi6abu3', 'opt-d5gdkyuif')">Required</button>
-<button class="param-tab" onclick="switchParamTab(event, 'opt-d5gdkyuif', 'req-o5wi6abu3')">Optional</button>
+<button class="param-tab active" onclick="switchParamTab(event, 'req-8x4x6ajgt', 'opt-n4q4ai5zb')">Required</button>
+<button class="param-tab" onclick="switchParamTab(event, 'opt-n4q4ai5zb', 'req-8x4x6ajgt')">Optional</button>
 </div>
-<div id="req-o5wi6abu3" class="param-tab-content active">
+<div id="req-8x4x6ajgt" class="param-tab-content active">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">scheduledGameTeamAssnId</span></td><td><span class="param-in">path</span></td><td><span class="param-type">string</span></td><td>Scheduled Game Team Assignment uuid to update</td></tr>
 </tbody></table>
 </div>
-<div id="opt-d5gdkyuif" class="param-tab-content">
+<div id="opt-n4q4ai5zb" class="param-tab-content">
 <table class="param-table"><thead><tr><th>Name</th><th>In</th><th>Type</th><th>Description</th></tr></thead><tbody>
 <tr><td><span class="param-name">Authorization</span></td><td><span class="param-in">header</span></td><td><span class="param-type">string</span></td><td>Session token for current user</td></tr>
 </tbody></table>
@@ -9062,8 +8586,20 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <h4>Responses</h4>
 <div class="response-codes"><span class="response-code success">200 Success.</span></div>
-<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre><code>true</code></pre></div>
+<div class="response-body" id="post-scheduled-games-assigned-scheduledGameTeamAssnId-roster-response-200" data-lines="1">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (200)</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('post-scheduled-games-assigned-scheduledGameTeamAssnId-roster-response-200', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">true</code>
+</div></div>
+</div>
 
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>curl -X POST &quot;https://api.sportsvisio-api.com/scheduled-games/assigned/{scheduledGameTeamAssnId}/roster&quot; \
@@ -9087,125 +8623,6 @@ upload().catch(e =&gt; console.error('Error:', e.response?.data || e.message));<
 
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#8593;</button>
 
-<script>
-function toggleTheme(){var h=document.documentElement,c=h.getAttribute('data-theme'),n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('sv-api-theme',n);document.getElementById('themeBtn').innerHTML=n==='dark'?'&#9788;':'&#9790;'}
-(function(){var s=localStorage.getItem('sv-api-theme');if(s){document.documentElement.setAttribute('data-theme',s);if(s==='dark')document.getElementById('themeBtn').innerHTML='&#9788;'}})();
-function toggleEndpoint(h){h.parentElement.classList.toggle('open')}
-function switchParamTab(e,showId,hideId){e.target.parentElement.querySelectorAll('.param-tab').forEach(t=>t.classList.remove('active'));e.target.classList.add('active');document.getElementById(hideId).classList.remove('active');document.getElementById(showId).classList.add('active')}
-function copyCode(b){var p=b.closest('.code-block').querySelector('pre');navigator.clipboard.writeText(p.textContent).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},2000)}).catch(function(){var r=document.createRange();r.selectNodeContents(p);var s=window.getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges();b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},2000)})}
-function copyEndpointLink(endpointId){var url=window.location.origin+window.location.pathname+'#'+endpointId;navigator.clipboard.writeText(url).then(function(){var btn=event.target;var orig=btn.innerHTML;btn.innerHTML='&#10003;';btn.style.color='var(--sv-red)';setTimeout(function(){btn.innerHTML=orig;btn.style.color=''},1500)}).catch(function(){})}
-// Auto-open endpoint cards when navigating via anchor
-function openEndpointFromHash(){var h=window.location.hash;if(h){var el=document.querySelector(h);if(el&&el.classList.contains('endpoint-card')){el.classList.add('open');el.scrollIntoView({behavior:'smooth',block:'start'})}}}
-window.addEventListener('hashchange',openEndpointFromHash);
-window.addEventListener('load',openEndpointFromHash);
-// Make headers clickable
-document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('h2[id],h3[id]').forEach(function(h){h.style.cursor='pointer';h.addEventListener('click',function(){var id=this.id;if(id){window.location.hash=id;navigator.clipboard.writeText(window.location.href).then(function(){var orig=h.textContent;h.textContent=h.textContent+' (Link copied!)';setTimeout(function(){h.textContent=orig},1500)}).catch(function(){})}})})})
-var searchIndex=[];var searchSelectedIdx=-1;
-function buildSearchIndex(){
-  searchIndex=[];
-  // Index sections
-  document.querySelectorAll('.section').forEach(function(sec){
-    var id=sec.id;if(!id)return;
-    var h2=sec.querySelector('h2');
-    var title=h2?h2.textContent:'';
-    var text=sec.textContent.substring(0,500);
-    searchIndex.push({id:id,title:title,section:'Section',text:text,el:sec});
-  });
-  // Index h3 subsections
-  document.querySelectorAll('h3[id]').forEach(function(h3){
-    var id=h3.id;
-    var parent=h3.closest('.section');
-    var parentTitle=parent?parent.querySelector('h2')?.textContent:'';
-    var nextSibling=h3.nextElementSibling;
-    var text=h3.textContent;
-    while(nextSibling&&nextSibling.tagName!=='H3'&&nextSibling.tagName!=='H2'){
-      text+=' '+nextSibling.textContent;
-      nextSibling=nextSibling.nextElementSibling;
-    }
-    searchIndex.push({id:id,title:h3.textContent,section:parentTitle||'Section',text:text.substring(0,500),el:h3});
-  });
-  // Index endpoint cards
-  document.querySelectorAll('.endpoint-card').forEach(function(card){
-    var path=card.querySelector('.endpoint-path')?.textContent||'';
-    var summary=card.querySelector('.endpoint-summary')?.textContent||'';
-    var method=card.querySelector('.method-badge')?.textContent||'';
-    var group=card.closest('.tag-group');
-    var groupTitle=group?group.querySelector('h3')?.textContent:'API';
-    var text=card.textContent.substring(0,500);
-    searchIndex.push({id:null,title:method+' '+path,section:groupTitle,text:text,el:card,isEndpoint:true,summary:summary});
-  });
-}
-function searchDocs(q){
-  var results=document.getElementById('searchResults');
-  var lq=q.toLowerCase().trim();
-  searchSelectedIdx=-1;
-  if(!lq){results.classList.remove('visible');results.innerHTML='';return;}
-  if(searchIndex.length===0)buildSearchIndex();
-  var matches=searchIndex.filter(function(item){
-    return item.title.toLowerCase().includes(lq)||item.text.toLowerCase().includes(lq);
-  }).slice(0,15);
-  if(matches.length===0){
-    results.innerHTML='<div class="search-no-results">No results found</div>';
-    results.classList.add('visible');
-    return;
-  }
-  var html=matches.map(function(m,i){
-    var ctx='';
-    var idx=m.text.toLowerCase().indexOf(lq);
-    if(idx>-1){
-      var start=Math.max(0,idx-30);
-      var end=Math.min(m.text.length,idx+lq.length+50);
-      ctx=(start>0?'...':'')+m.text.substring(start,end).replace(new RegExp('('+lq.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')+(end<m.text.length?'...':'');
-    }
-    return '<div class="search-result-item" data-idx="'+i+'" onclick="goToResult('+i+')"><div class="search-result-section">'+m.section+'</div><div class="search-result-title">'+m.title+'</div>'+(ctx?'<div class="search-result-context">'+ctx+'</div>':'')+'</div>';
-  }).join('');
-  results.innerHTML=html;
-  results.classList.add('visible');
-  window.searchMatches=matches;
-}
-function goToResult(idx){
-  var m=window.searchMatches[idx];
-  if(!m)return;
-  document.getElementById('searchResults').classList.remove('visible');
-  document.getElementById('searchInput').value='';
-  if(m.isEndpoint){
-    m.el.classList.add('open');
-    m.el.scrollIntoView({behavior:'smooth',block:'center'});
-  }else if(m.id){
-    var el=document.getElementById(m.id);
-    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
-  }else{
-    m.el.scrollIntoView({behavior:'smooth',block:'center'});
-  }
-}
-function handleSearchKey(e){
-  var results=document.getElementById('searchResults');
-  var items=results.querySelectorAll('.search-result-item');
-  if(!items.length)return;
-  if(e.key==='ArrowDown'){
-    e.preventDefault();
-    searchSelectedIdx=Math.min(searchSelectedIdx+1,items.length-1);
-    items.forEach(function(it,i){it.classList.toggle('selected',i===searchSelectedIdx)});
-    items[searchSelectedIdx]?.scrollIntoView({block:'nearest'});
-  }else if(e.key==='ArrowUp'){
-    e.preventDefault();
-    searchSelectedIdx=Math.max(searchSelectedIdx-1,0);
-    items.forEach(function(it,i){it.classList.toggle('selected',i===searchSelectedIdx)});
-    items[searchSelectedIdx]?.scrollIntoView({block:'nearest'});
-  }else if(e.key==='Enter'&&searchSelectedIdx>=0){
-    e.preventDefault();
-    goToResult(searchSelectedIdx);
-  }else if(e.key==='Escape'){
-    results.classList.remove('visible');
-  }
-}
-document.addEventListener('click',function(e){if(!e.target.closest('.search-box'))document.getElementById('searchResults').classList.remove('visible')});
-(function(){var secs=document.querySelectorAll('.section,.tag-group,.hero'),links=document.querySelectorAll('.sidebar-link'),obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){var id=e.target.id;links.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+id)})}})},{rootMargin:'-80px 0px -60% 0px',threshold:0});secs.forEach(function(s){if(s.id)obs.observe(s)})})();
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
-function closeMobile(){if(window.innerWidth<=900)document.getElementById('sidebar').classList.remove('open')}
-document.addEventListener('click',function(e){var sb=document.getElementById('sidebar'),hb=document.querySelector('.hamburger');if(window.innerWidth<=900&&sb.classList.contains('open')&&!sb.contains(e.target)&&!hb.contains(e.target))sb.classList.remove('open')});
-window.addEventListener('scroll',function(){document.getElementById('backToTop').classList.toggle('visible',window.scrollY>400)});
-document.querySelectorAll('.quick-link').forEach(function(l){l.addEventListener('click',function(e){e.preventDefault();var t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'})})});
-</script>
+<script src="scripts.js"></script>
 </body>
 </html>

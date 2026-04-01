@@ -5,8 +5,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-// const SWAGGER_URL = 'https://api.sportsvisio-api.com/api-docs/public-json';
-const SWAGGER_URL = 'http://localhost:3000/api-docs/public-json';
+const SWAGGER_URL = 'https://api.sportsvisio-api.com/api-docs/public-json';
+// const SWAGGER_URL = 'http://localhost:3000/api-docs/public-json';
 
 const HTML_FILE = path.join(__dirname, '..', 'docs', 'index.html');
 
@@ -267,7 +267,42 @@ function formatSchemaExample(schema, swagger, depth = 0, indent = '') {
   }
 }
 
-function generateResponseSection(responses, swagger) {
+function generateResponseBodyHtml(example, responseId, code) {
+  // Convert to string if not already (handles primitives like numbers, booleans)
+  const exampleStr = String(example);
+  const lines = exampleStr.split('\n');
+  const lineCount = lines.length;
+  const isLarge = lineCount > 10;
+
+  // Build the collapsible response body component
+  // Line numbers are generated programmatically by JavaScript
+  const collapsedClass = isLarge ? ' response-body-collapsed' : '';
+
+  let html = `<div class="response-body${collapsedClass}" id="${responseId}" data-lines="${lineCount}">
+<div class="response-body-header" onclick="toggleResponseBody(this)">
+<span class="response-body-toggle"><span class="response-body-chevron">&#9654;</span> Response Body (${code})</span>
+<div class="response-body-actions">
+<button class="copy-btn" onclick="event.stopPropagation(); copyResponseBodyCode(this)">Copy</button>
+<button class="response-body-link" onclick="copyResponseBodyLink('${responseId}', event)" title="Copy link to this response">#</button>
+</div>
+</div>
+<div class="response-body-content">
+<div class="response-body-pre">
+<div class="response-body-lines"></div>
+<code class="response-body-code">${escapeHtml(exampleStr)}</code>
+</div>`;
+
+  if (isLarge) {
+    html += `<div class="response-body-expand"><button class="response-body-expand-btn" onclick="expandResponseBody(this)">Show all ${lineCount} lines</button></div>`;
+  }
+
+  html += `</div>
+</div>\n`;
+
+  return html;
+}
+
+function generateResponseSection(responses, swagger, endpointId) {
   if (!responses) return '';
 
   let html = '<h4>Responses</h4>\n';
@@ -296,8 +331,8 @@ function generateResponseSection(responses, swagger) {
       if (schema) {
         const example = formatSchemaExample(schema, swagger, 0, '');
         if (example) {
-          html += `<div class="code-block"><div class="code-block-header"><span>Response Body</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>\n`;
-          html += `<pre><code>${escapeHtml(example)}</code></pre></div>\n`;
+          const responseId = `${endpointId}-response-${code}`;
+          html += generateResponseBodyHtml(example, responseId, code);
         }
       }
     }
@@ -340,7 +375,7 @@ function generateEndpointCard(method, path, operation, baseUrl, swagger) {
 <div class="endpoint-body">
 <p class="endpoint-desc">${escapeHtml(description)}</p>
 ${generateParametersTable(parameters)}
-${generateResponseSection(operation.responses, swagger)}
+${generateResponseSection(operation.responses, swagger, endpointId)}
 <div class="code-block"><div class="code-block-header"><span>curl</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
 <pre><code>${escapeHtml(generateCurlExample(method, path, baseUrl))}</code></pre></div>
 </div></div>
@@ -439,7 +474,7 @@ function generateApiReference(swagger) {
 function updateSidebar(htmlContent, tagGroups) {
   // Find and update the API Reference sidebar section
   const sidebarStart = '<div class="sidebar-section">API Reference</div>';
-  const sidebarEnd = '<div class="sidebar-section">More</div>';
+  const sidebarEnd = '</div>\n</nav>';
 
   const startIdx = htmlContent.indexOf(sidebarStart);
   const endIdx = htmlContent.indexOf(sidebarEnd);
@@ -450,7 +485,7 @@ function updateSidebar(htmlContent, tagGroups) {
   }
 
   const sidebarLinks = generateSidebarLinks(tagGroups);
-  const newSidebar = sidebarStart + '\n' + sidebarLinks + '\n  ';
+  const newSidebar = sidebarStart + '\n' + sidebarLinks + '\n';
 
   return htmlContent.substring(0, startIdx) + newSidebar + htmlContent.substring(endIdx);
 }
